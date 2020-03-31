@@ -1,0 +1,34 @@
+{% extends 'front/main.html' %}
+
+{% block content %}
+
+{%  include 'front/status.html' %}
+
+<br>
+
+<div class="row">
+	<div class="col-md-5">
+		<h5>CONTESTS:</h5>
+		<hr>
+		<div class="card card-body">
+			<table class="table table-sm">
+				<tr>
+					<th></th>
+					<th>TITLE</th>
+					<th>STARTING TIME</th>
+				</tr>
+
+				{% for contest in contests %}
+					<tr>
+						<td><a class="btn btn-sm btn-info" href="#">View</a></td>
+						<td>{{contest.title}}</td>
+						<td>{{contest.start_time}}</td>
+					</tr>
+				{% endfor %}
+
+			</table>
+		</div>
+	</div>
+
+
+{% endblock %}
