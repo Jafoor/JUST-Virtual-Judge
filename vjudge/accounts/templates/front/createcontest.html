@@ -1,0 +1,78 @@
+{% extends 'front/main.html' %}
+
+{% load static %}
+{% block content %}
+
+{%  include 'front/status.html' %}
+
+<br>
+
+<form method="post" action="">
+<div style="max-width: 400px;">
+</div>
+<div style="padding-bottom: 18px;font-size : 24px; font-weight:bold " align = "center"><h2>Create A Contest</h2></div>
+<div style="padding-bottom: 18px; font-weight:bold "><h4>CONTEST TITLE<span style="color: red;"> *</span></h4><br/>
+<input type="text" id="data_5" name="data_5" placeholder = "Contest Title" style="" class="form-control" required>
+</div>
+
+<div style="padding-bottom: 18px; font-weight:bold " ><h4>CONTEST DESCRIPTION</h4><br/>
+<textarea id="data_11" false name="data_11" style="" rows="8" class="form-control" placeholder="Describe about the contest"></textarea>
+</div>
+
+<div style="padding-bottom: 18px; font-weight:bold "><h4>BEGINING TIME<span style="color: red;"> *</span></h4><br/>
+  <input type="text" id="data_5" name="data_5" placeholder = "2020-05-05 15:00:00" style="" class="form-control" value = "2020-05-05 15:00:00" required>
+</div>
+
+<div style="padding-bottom: 18px; font-weight:bold "><h4>LENGTH<span style="color: red;"> *</span></h4><br/>
+  <input type="text" id="data_5" name="data_5" placeholder = "HOUR:MIN:SEC" style="" class="form-control" value = "5:0:0" required>
+</div>
+
+
+
+<div style = "padding-bottom: 18px; font-weight:bold" ><h4>PROBLEMAET<span style="color: red;"> *</span></h4><br/>
+    <table id="addTable" style="width:700px">
+      <thead>
+        <tr>
+          <th style="width:30px"><a id="addBtn" href="javascript:void(0)"><img height="18" src="{% static 'images/ico_add.png' %}" border="0"/></a></th>
+          <th style="width:97px">OJ</th>
+          <th style="width:80px">ProbNum</th>
+          <th style="width:153px">Alias</th>
+          <th style="width:24px"></th>
+          <th style="text-align:left">Title</th>
+        </tr>
+      </thead>
+
+      <s:if test="pids != null">
+            <s:iterator value="OJs" status="stat">
+                <tr class="tr_problem">
+                    <td><a class="deleteRow" href="javascript:void(0)"><img height="18" src="${contextPath}/images/ico_delete.gif" border="0"/></a></td>
+                    <td><s:select name="OJs" value="%{OJs[#stat.index]}" list="OJList" /><s:hidden name="pids" value="%{pids[#stat.index]}" /></td>
+                    <td><s:textfield cssStyle="width:80px" name="probNums" value="%{probNums[#stat.index]}" /></td>
+                    <td><s:textfield name="titles" value="%{titles[#stat.index]}" /></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </s:iterator>
+            </s:if>
+                <tr id="addRow" class="tr_problem" style="display:none">
+                    <td><a class="deleteRow" href="javascript:void(0)"><img height="18" src="${contextPath}/images/ico_delete.gif" border="0"/></a></td>
+                    <td><s:select name="OJs" list="OJList" /><s:hidden name="pids" /></td>
+                    <td><s:textfield cssStyle="width:80px" name="probNums" /></td>
+                    <td><s:textfield name="titles" /></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                
+    </table>
+</div>
+
+
+
+
+  <div class="d-flex justify-content-center mt-3 login_container">
+  <input class="btn btn-danger" type="submit" value="Create">
+  </div>
+</form>
+
+
+{% endblock %}

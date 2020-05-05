@@ -46,16 +46,27 @@ def loginPage(request):
         context = {}
         return render(request , 'front/login.html', context)
 
-login_required(login_url = 'login')
+@login_required(login_url = '/loginPage/')
 def logoutUser(request):
     logout(request)
     return redirect('login')
 
-login_required(login_url = 'login')
+#@login_required(login_url = '/loginPage/')
 def home(request):
     contests = Contest.objects.all()
     total_contests = contests.count()
+    usertype = request.user.username
+    print(usertype)
     context = {
-        'contests':contests, 'total_contests': total_contests
+        'contests':contests, 'total_contests': total_contests, 'usertype': usertype
     }
     return render(request , 'front/home.html',context)
+
+def aboutpage(request):
+    return render(request, 'front/about.html')
+
+def contestpage(request):
+    return render(request, 'front/contestlist.html')
+
+def createcontestpage(request):
+    return render(request, 'front/createcontest.html')

@@ -7,4 +7,7 @@ urlpatterns = [
     url(r'^register/$',views.registerPage, name = "register"),
     url(r'^login/$',views.loginPage, name = "login"),
     url(r'^logout/$',views.logoutUser, name = "logout"),
+    url(r'^about/$',views.aboutpage, name = "about"),
+    url(r'^contest/$',views.contestpage, name = "contest"),
+    url(r'^createcontest/$',views.createcontestpage, name = "createcontest"),
 ]
