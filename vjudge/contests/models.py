@@ -3,26 +3,11 @@ from django.db import models
 # Create your models here.
 
 class Contest(models.Model):
-    id = models.AutoField(primary_key=True)
-    title = models.TextField(max_length = 50)
-    description = models.TextField(max_length = 200)
-    password = models.TextField(null=True)
-    rule_type = models.TextField(null=True)
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
-    create_time = models.DateTimeField(auto_now_add=True)
-    last_update_time = models.DateTimeField(auto_now=True)
-
+    ctitle = models.TextField(max_length = 50)
+    cdescription = models.TextField(max_length = 200)
+    cpassword = models.TextField(null=True)
+    cbeginingdate = models.CharField(max_length = 20, default = "05/06/2020")
+    cbeginingtime = models.CharField(max_length = 20, default = "07:00 PM")
+    clength = models.CharField(max_length = 20)
     def __str__(self):
-        return self.title
-
-class Problem(models.Model):
-    Contest = models.ForeignKey(Contest,null=True, on_delete=models.SET_NULL)
-    name = models.CharField(max_length = 50)
-    description = models.CharField(max_length=2000)
-    input = models.CharField(max_length = 500)
-    output = models.CharField(max_length = 500)
-    note = models.CharField(max_length=500, null=True)
-
-    def __str__(self):
-        return self.name
+        return self.ctitle

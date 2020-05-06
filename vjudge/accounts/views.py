@@ -64,9 +64,3 @@ def home(request):
 
 def aboutpage(request):
     return render(request, 'front/about.html')
-
-def contestpage(request):
-    return render(request, 'front/contestlist.html')
-
-def createcontestpage(request):
-    return render(request, 'front/createcontest.html')

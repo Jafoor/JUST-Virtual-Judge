@@ -1,0 +1,186 @@
+{% extends 'front/main.html' %}
+
+{% load static %}
+{% block content %}
+
+{%  include 'front/status.html' %}
+
+<style>
+  body,
+  html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #7abecc !important;
+  }
+
+  .user_card {
+    width: 1000px;
+    margin-top: auto;
+    margin-bottom: auto;
+    background: #74cfbf;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    -moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 5px;
+  }
+
+  .user_card1 {
+    width: 1000px;
+    margin-top: auto;
+    margin-bottom: auto;
+    background: #74cfbf;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    -moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 5px;
+  }
+
+  .hl{
+
+    text-align: center;
+    font-weight: bold;
+    color: white;
+    padding: 20px;
+  }
+
+  .hl1{
+
+    text-align: center;
+    font-weight: bold;
+    color: red;
+    padding: 20px;
+  }
+
+  #demo{
+    text-align: center;
+  }
+
+</style>
+
+<div class="container h-100">
+  <div class="d-flex justify-content-center h-100">
+    <div class="user_card">
+      <h2 class = "hl" >  {{contestdetails.ctitle}} </h2>
+    </div>
+  </div>
+</div>
+
+<br>
+
+<div class="container h-100">
+  <div class="d-flex justify-content-center h-100">
+    <div class="user_card1">
+      <h2 class = "hl1" > Remaining Time to Start  </h2>
+      <p id="demo"></p>
+      	<script>
+      	// Set the date we're counting down to
+        var x = "{{p}}";
+      	var countDownDate = new Date(x).getTime();
+
+      	// Update the count down every 1 second
+      	var x = setInterval(function() {
+
+      	  // Get today's date and time
+      	  var now = new Date().getTime();
+
+      	  // Find the distance between now and the count down date
+      	  var distance = countDownDate - now;
+
+      	  // Time calculations for days, hours, minutes and seconds
+      	  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      	  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      	  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      	  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      	  // Output the result in an element with id="demo"
+      	  document.getElementById("demo").innerHTML = days + "d " + hours + "h "
+      	  + minutes + "m " + seconds + "s ";
+
+      	  // If the count down is over, write some text
+      	  if (distance < 0) {
+      	    clearInterval(x);
+      	    document.getElementById("demo").innerHTML = "শুরু হইয়া গেছে মামা";
+
+      	  }
+      	}, 1000);
+      	</script>
+
+
+
+      	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      	    </div>
+      	  </div>
+      	</div>
+
+        {% if contestdetails.cpassword != ""%}
+        <br>
+
+
+
+        <div class="container h-100">
+
+          <div class="d-flex justify-content-center h-100">
+
+            <div class="user_card">
+              <form class=""  method="post">
+                {% csrf_token %}
+              <h2 class = "hl" >  Enter Password </h2>
+              <input type="text" name="gpassword" placeholder = "Enter Contest Password" style="" class="form-control">
+              <div class="d-flex justify-content-center mt-3 login_container">
+				 				<input class="btn btn-danger" type="submit" value="Enter">
+				   			</div>
+              </form>
+            </div>
+
+
+          </div>
+
+          {% for message in messages %}
+            <p id="messages">{{message}} </p>
+          {% endfor %}
+        </div>
+
+        {% else %}
+        <br>
+
+
+
+        <div class="container h-100">
+
+          <div class="d-flex justify-content-center h-100">
+
+            <div class="user_card">
+              <form class=""  method="post">
+                {% csrf_token %}
+              <h2 class = "hl" > Enter the Contest </h2>
+              <div class="d-flex justify-content-center mt-3 login_container">
+				 				<input class="btn btn-danger" type="submit" value="Enter">
+				   			</div>
+              </form>
+            </div>
+
+
+          </div>
+
+          {% for message in messages %}
+            <p id="messages">{{message}} </p>
+          {% endfor %}
+        </div>
+
+
+        {% endif %}
+
+      	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+{% endblock %}
