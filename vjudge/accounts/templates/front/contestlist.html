@@ -44,7 +44,7 @@
 <div class="container h-100">
   <div class="d-flex justify-content-center h-100">
     <div class="user_card">
-      <h2 class = "hl" > Contest List </h2>
+      <h2 class = "hl" > Running Contests </h2>
       <table class="table table-bordered" width = "500">
       	<thead>
       		<tr class="hl" >
@@ -54,7 +54,89 @@
       		</tr>
       	</thead>
 
-        {% for con in contests %}
+        {% for con in running %}
+      	<tbody>
+      		<tr>
+      			<td>
+      				<a href="{% url 'contesttask' pk=con.pk%}"> {{con}} </a>
+      			</td>
+      			<td> Admin </td>
+      			<td>{{con.cbeginingdate}} | {{con.cbeginingtime}}</td>
+      		</tr>
+      	</tbody>
+        {% endfor %}
+      </table>
+
+      <script>
+    window.setInterval('refresh()', 30000); 	// Call a function every 10000 milliseconds (OR 10 seconds).
+
+  // Refresh or reload page.
+    function refresh() {
+      window .location.reload();
+  }
+    </script>
+
+    </div>
+  </div>
+</div>
+
+<br>
+
+<div class="container h-100">
+  <div class="d-flex justify-content-center h-100">
+    <div class="user_card">
+      <h2 class = "hl" > Upcomming Contests </h2>
+      <table class="table table-bordered" width = "500">
+      	<thead>
+      		<tr class="hl" >
+      			<th scope="col" width = "60%"  >Contest</th>
+      			<th scope="col" width = "15%" align = "center">Setter</th>
+      			<th scope="col" width = "25%" align = "center">Time</th>
+      		</tr>
+      	</thead>
+
+        {% for con in upcomming %}
+      	<tbody>
+      		<tr>
+      			<td>
+      				<a href="{% url 'contesttask' pk=con.pk%}"> {{con}} </a>
+      			</td>
+      			<td> Admin </td>
+      			<td>{{con.cbeginingdate}} | {{con.cbeginingtime}}</td>
+      		</tr>
+      	</tbody>
+        {% endfor %}
+      </table>
+
+      <script>
+    window.setInterval('refresh()', 30000); 	// Call a function every 10000 milliseconds (OR 10 seconds).
+
+  // Refresh or reload page.
+    function refresh() {
+      window .location.reload();
+  }
+    </script>
+
+    </div>
+  </div>
+</div>
+
+<br>
+
+<div class="container h-100">
+  <div class="d-flex justify-content-center h-100">
+    <div class="user_card">
+      <h2 class = "hl" > Ended Contests </h2>
+      <table class="table table-bordered" width = "500">
+      	<thead>
+      		<tr class="hl" >
+      			<th scope="col" width = "60%"  >Contest</th>
+      			<th scope="col" width = "15%" align = "center">Setter</th>
+      			<th scope="col" width = "25%" align = "center">Time</th>
+      		</tr>
+      	</thead>
+
+        {% for con in ended %}
       	<tbody>
       		<tr>
       			<td>

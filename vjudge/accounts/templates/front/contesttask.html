@@ -64,6 +64,27 @@
 
   #demo{
     text-align: center;
+    text-color: red;
+  }
+
+  #messages{
+    background-color: red;
+    color: #fff;
+    padding: 10px;
+    margin-top: 10px;
+
+    -webkit-animation: cssAnimation 5s forwards;
+        animation: cssAnimation 5s forwards;
+
+    -moz-animation: cssAnimation 0s ease-in 5s forwards;
+      /* Firefox */
+      -webkit-animation: cssAnimation 0s ease-in 5s forwards;
+      /* Safari and Chrome */
+      -o-animation: cssAnimation 0s ease-in 5s forwards;
+      /* Opera */
+      animation: cssAnimation 0s ease-in 5s forwards;
+      -webkit-animation-fill-mode: forwards;
+      animation-fill-mode: forwards;
   }
 
 </style>
@@ -82,11 +103,13 @@
   <div class="d-flex justify-content-center h-100">
     <div class="user_card1">
       <h2 class = "hl1" > Remaining Time to Start  </h2>
-      <p id="demo"></p>
+      <p id="demo" style = "color:red"></p>
       	<script>
       	// Set the date we're counting down to
         var x = "{{p}}";
+        var y = "{{finished}}"
       	var countDownDate = new Date(x).getTime();
+        var countDownDate1 = new Date(y).getTime();
 
       	// Update the count down every 1 second
       	var x = setInterval(function() {
@@ -96,7 +119,7 @@
 
       	  // Find the distance between now and the count down date
       	  var distance = countDownDate - now;
-
+          var distance1 = countDownDate1 - now;
       	  // Time calculations for days, hours, minutes and seconds
       	  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
       	  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -105,11 +128,17 @@
 
       	  // Output the result in an element with id="demo"
       	  document.getElementById("demo").innerHTML = days + "d " + hours + "h "
-      	  + minutes + "m " + seconds + "s ";
+      	  + minutes + "m " + seconds + "s     ";
+          // If the count down is over, write some text
+      	  if (distance1 < 0) {
+      	    clearInterval(x);
+      	    document.getElementById("demo").innerHTML = "শেষ হইয়া গেছে মামা";
+
+      	  }
 
       	  // If the count down is over, write some text
-      	  if (distance < 0) {
-      	    clearInterval(x);
+      	  else if (distance < 0 && distance1>0) {
+      	    //clearInterval(x);
       	    document.getElementById("demo").innerHTML = "শুরু হইয়া গেছে মামা";
 
       	  }
@@ -137,6 +166,9 @@
                 {% csrf_token %}
               <h2 class = "hl" >  Enter Password </h2>
               <input type="text" name="gpassword" placeholder = "Enter Contest Password" style="" class="form-control">
+              {% for message in messages %}
+                <p id="messages">{{message}} </p>
+              {% endfor %}
               <div class="d-flex justify-content-center mt-3 login_container">
 				 				<input class="btn btn-danger" type="submit" value="Enter">
 				   			</div>
@@ -146,9 +178,7 @@
 
           </div>
 
-          {% for message in messages %}
-            <p id="messages">{{message}} </p>
-          {% endfor %}
+
         </div>
 
         {% else %}
@@ -164,6 +194,9 @@
               <form class=""  method="post">
                 {% csrf_token %}
               <h2 class = "hl" > Enter the Contest </h2>
+              {% for message in messages %}
+                <p id="messages">{{message}} </p>
+              {% endfor %}
               <div class="d-flex justify-content-center mt-3 login_container">
 				 				<input class="btn btn-danger" type="submit" value="Enter">
 				   			</div>
@@ -172,10 +205,6 @@
 
 
           </div>
-
-          {% for message in messages %}
-            <p id="messages">{{message}} </p>
-          {% endfor %}
         </div>
 
 

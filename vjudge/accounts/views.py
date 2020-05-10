@@ -10,6 +10,7 @@ from .forms import CreateUserForm
 import datetime
 from django.utils.timezone import utc
 from contests.models import *
+import requests
 
 def registerPage(request):
     if request.user.is_authenticated:
@@ -53,12 +54,13 @@ def logoutUser(request):
 
 #@login_required(login_url = '/loginPage/')
 def home(request):
+
     contests = Contest.objects.all()
     total_contests = contests.count()
     usertype = request.user.username
     print(usertype)
     context = {
-        'contests':contests, 'total_contests': total_contests, 'usertype': usertype
+         'usertype': usertype
     }
     return render(request , 'front/home.html',context)
 

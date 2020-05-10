@@ -1,0 +1,171 @@
+{% extends 'back/dashboard.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+<link rel="stylesheet" type="text/css" href="{% static '/home/css/main.css' %}">
+<style>
+#messages{
+  background-color: red;
+  color: #fff;
+  padding: 10px;
+  margin-top: 10px;
+
+  -webkit-animation: cssAnimation 5s forwards;
+      animation: cssAnimation 5s forwards;
+
+  -moz-animation: cssAnimation 0s ease-in 5s forwards;
+    /* Firefox */
+    -webkit-animation: cssAnimation 0s ease-in 5s forwards;
+    /* Safari and Chrome */
+    -o-animation: cssAnimation 0s ease-in 5s forwards;
+    /* Opera */
+    animation: cssAnimation 0s ease-in 5s forwards;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+}
+#data_5{
+  padding-right: 30px;
+
+  padding-left: 40px;
+}
+</style>
+<div>
+<form method="post" action="">
+   {% csrf_token %}
+<div style="max-width: 400px;">
+</div>
+<div style="padding-bottom: 18px;font-size : 24px; font-weight:bold " align = "center"><h2>ADD PROBLEM</h2></div>
+<div class="form-group" align = "center">
+         <div class="col-md-12">
+           <h4 align = "center">Problem Title<span style="color: red;"> *</span></h4>
+               <input type="text" id = "title" name="ptitle" rows = "10" class="form-control" placeholder="Problem Title" required></input>
+         </div>
+</div>
+
+ <div class="form-group" align = "center">
+         <div class="col-md-4">
+           <h4 align = "center">Time Limit<span style="color: red;"> *</span></h4>
+               <input type="number" id = "timelimit" name="ptimelimit" rows = "1" class="form-control" placeholder="Ex: 2" required></input>
+               <br>
+        </div>
+
+          <div class="col-md-4">
+            <h4 align = "center">Memory Limit<span style="color: red;"> *</span></h4>
+                <input type="number" id = "memorylimit" name="pmemorylimit" rows = "1" class="form-control" placeholder="Ex : 1024" required></input>
+          </div>
+  </div>
+
+  <div class="form-group" align = "center">
+           <div class="col-md-12">
+             <h4 align = "center">Description<span style="color: red;"> *</span></h4>
+                 <textarea type="text" id = "description" name="pdescription" rows = "10" class="form-control" placeholder="Problem Description" required></textarea>
+           </div>
+  </div>
+
+  <script>
+      CKEDITOR.replace('description');
+   </script>
+
+   <div class="form-group" align = "center">
+            <div class="col-md-12">
+              <h4 align = "center">Input<span style="color: red;"> *</span></h4>
+                  <textarea type="text" id = "input" name="pinput" rows = "10" class="form-control" placeholder="Input" required></textarea>
+            </div>
+   </div>
+   <script>
+       CKEDITOR.replace('input');
+    </script>
+
+    <div class="form-group" align = "center">
+             <div class="col-md-12">
+               <h4 align = "center">Output<span style="color: red;"> *</span></h4>
+                   <textarea type="text" id = "output" name="poutput" rows = "10" class="form-control" placeholder="output" required></textarea>
+             </div>
+    </div>
+    <script>
+        CKEDITOR.replace('output');
+     </script>
+
+     <div class="form-group" align = "center">
+              <div class="col-md-12">
+                <h4 align = "center">Example Input<span style="color: red;"> *</span></h4>
+                    <textarea type="text" id = "exinput" name="pexinput" rows = "10" class="form-control" placeholder="Input" required></textarea>
+              </div>
+     </div>
+     <script>
+         CKEDITOR.replace('exinput');
+      </script>
+
+      <div class="form-group" align = "center">
+               <div class="col-md-12">
+                 <h4 align = "center">Example Output<span style="color: red;"> *</span></h4>
+                     <textarea type="text" id = "eoutput" name="pexoutput" rows = "10" class="form-control" config.placeholder = 'Type here...' required ></textarea>
+               </div>
+      </div>
+      <script>
+          CKEDITOR.replace('eoutput');
+       </script>
+
+       <div class="form-group" align = "center">
+                <div class="col-md-12">
+                  <h4 align = "center">Note</h4>
+                      <textarea type="text" id = "note" name="pnote" rows = "10" class="form-control" config.placeholder = 'Type here...'' ></textarea>
+                </div>
+       </div>
+       <script>
+           CKEDITOR.replace('note');
+        </script>
+
+        <div class="form-group" align = "center">
+                 <div class="col-md-12">
+                   <h4 align = "center">Problem ID<span style="color: red;"> *</span></h4>
+                       <input type="text" id = "id" name="pid" rows = "" class="form-control" placeholder="Problem Id" required></input>
+                 </div>
+        </div>
+
+        <div class="form-group" align = "center">
+                 <div class="col-md-12">
+                      <h4 align = "center">Tags</h4>
+                       <input type="text" id = "tag" name="ptags" rows = "" class="form-control" placeholder="Use , after every Tag"></input>
+                 </div>
+        </div>
+
+        <div class="form-group" align = "center">
+                    <div class="col-md-6">
+                      <h4 align = "center">Type</h4>
+                      <select id="ptype" name="ptype" class="select-chosen" data-placeholder="Choose a Categoryg.." required style="width: 250px;">
+                        {% for i in type%}
+                          <option value="{{i}}">{{i}}</option>
+                        {% endfor %}
+
+                      </select>
+                    </div>
+        </div>
+
+        <div class="form-group" align = "center">
+                    <div class="col-md-12">
+                      <h4 align = "center">Do you want to Public the Problem?</h4>
+                      <select id="show" name="pshow" class="select-chosen" data-placeholder="Choose a Categoryg.." style="width: 250px;">
+                        {% for i in share%}
+                          <option value="{{i}}">{{i}}</option>
+                        {% endfor %}
+
+                      </select>
+                    </div>
+        </div>
+
+
+  <div class="d-flex justify-content-center mt-3 login_container">
+  <input class="btn btn-danger" type="submit" value="Create">
+  </div>
+
+  <br>
+  <br>
+
+
+
+</form>
+<div>
+{% endblock%}

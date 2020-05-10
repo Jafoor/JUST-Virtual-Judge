@@ -15,7 +15,59 @@ from django.utils.timezone import utc
 def contestpage(request):
 
     contests = Contest.objects.all()
-    return render(request, 'front/contestlist.html', {'contests' : contests})
+    ended = []
+    running = []
+    upcomming = []
+    for i in contests:
+
+
+        sdate = i.cbeginingdate
+        sdate = sdate.split("-")
+        day = sdate[2]
+        year = sdate[0]
+        month = sdate[1]
+
+        if len(str(day)) == 1:
+            day = '0' + str(day)
+        if len(str(month)) == 1:
+            month = '0' + str(month)
+
+        stime = i.cbeginingtime
+        stime = stime.split(":")
+
+        if len(str(stime[0])) == 1:
+            stime[0] = '0' + str(stime[0])
+        if len(str(stime[1])) == 1:
+            stime[1] = '0' + str(stime[1])
+        p1 = day+"/"+month+"/"+year+" "+stime[0]+":"+stime[1]+":"+str(00)
+        startdate = datetime.datetime.strptime(p1, '%d/%m/%Y %H:%M:%S')
+        today = datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
+        today = datetime.datetime.strptime(today,'%d/%m/%Y %H:%M:%S')
+        #print(today)
+        #print(startdate)
+        diff = today - startdate
+        if int(diff.days) < 0:
+            upcomming.append(i)
+        ln = i.clength
+        ln = ln.split(":")
+        enddate = startdate + datetime.timedelta(hours=int(ln[0]), minutes = int(ln[1]), seconds=int(ln[2]) )
+
+        finished = str(enddate.day)+"/"+str(enddate.month)+"/"+str(enddate.year)+" "+str(enddate.hour)+":"+str(enddate.minute)+":"+str(enddate.second)
+        finished = datetime.datetime.strptime(finished, '%d/%m/%Y %H:%M:%S')
+        #print(finished)
+        diff1 = finished-today
+        #print(diff)
+        #print(diff1)
+        if diff.days>=0 and diff1.days>=0:
+            running.append(i)
+        if diff.days>=0 and diff1.days<0:
+            ended.append(i)
+    return render(request, 'front/contestlist.html', {'contests' : contests, 'ended':ended, 'upcomming':upcomming, 'running':running})
+
+
+
+
+
 
 def createcontestpage(request):
 
@@ -26,14 +78,30 @@ def createcontestpage(request):
         beginingdate = request.POST.get('cbeginingdate')
         beginingtime = request.POST.get('cbeginingtime')
         length = request.POST.get('clength')
+        ln = length.split(":")
+        if len(ln) != 3:
+            messages.info(request, "Correct Your Formate like hour:min:sec")
+            return redirect('createcontest')
+
+        if int(ln[0])>99 or int(ln[1])>59 or (int(ln[2])>59):
+            messages.info(request, "Hour Should be lessthan 100, min and sec Should be lessthan 60")
+            return redirect('createcontest')
+        if int(ln[0])<0 or int(ln[1])<0 or (int(ln[2])<0):
+            messages.info(request, "Time Can't be negative")
+            return redirect('createcontest')
+
         password = request.POST.get('cpassword')
         b = Contest(ctitle = title , cbeginingdate = beginingdate, cdescription = description, cbeginingtime = beginingtime, clength = length, cpassword = password)
         b.save()
-        print(title)
+        #print(title)
 
         return redirect('contest')
 
-    return render(request, 'front/createcontest.html')
+    return render(request, 'back/createcontest.html')
+
+
+
+
 
 def contesttask(request,pk):
 
@@ -92,8 +160,17 @@ def contesttask(request,pk):
                    return redirect('contesttask', pk=contestdetails.pk)
 
     p = month+", "+day+", "+year+" "+stime[0]+":"+stime[1]+":"+str(00)
-    #print(p)
-    return render(request, 'front/contesttask.html',{'contestdetails':contestdetails, 'p':p})
+    p1 = day+"/"+month+"/"+year+" "+stime[0]+":"+stime[1]+":"+str(00)
+    #for Length of the contest
+    ln = contestdetails.clength
+    ln = ln.split(":")
+    startdate = datetime.datetime.strptime(p1, '%d/%m/%Y %H:%M:%S')
+    enddate = startdate + datetime.timedelta(hours=int(ln[0]), minutes = int(ln[1]), seconds=int(ln[2]) )
+    print(startdate)
+    print(enddate)
+    finished = str(enddate.month)+", "+str(enddate.day)+", "+str(enddate.year)+" "+str(enddate.hour)+":"+str(enddate.minute)+":"+str(enddate.second)
+    print(finished)
+    return render(request, 'front/contesttask.html',{'contestdetails':contestdetails, 'p':p, 'finished':finished})
 
 def tasks(request,pk):
 

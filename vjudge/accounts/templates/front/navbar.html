@@ -16,23 +16,29 @@
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav">
       <li class="nav-item active">
-        <a class="nav-link" href="{% url 'home' %}">Home</a>
       </li>
     </ul>
     {% if request.user.username != '' %}
     <span class="hello-msg">Hello, {{request.user}}</span>
     {% endif %}
+
+    {% if request.user.username == 'admin' %}
+    <span ><a  class="hello-msg" href="{% url 'dashboard' %}" > Dashboard</a></span>
+    {% endif %}
+
+    {% if request.user.username == 'admin' %}
+    <span ><a  class="hello-msg" href="{% url 'createcontest' %}">Create Contest</a></span>
+    {% endif %}
+
   </div>
 
+  <span ><a class="hello-msg" href="{% url 'home' %}">Home</a></span>
 
+  <span ><a class="hello-msg" href="{% url 'viewproblems' %}">Problems</a></span>
 
   <span ><a  class="hello-msg" href="{% url 'about' %}">About</a></span>
 
   <span ><a  class="hello-msg" href="{% url 'contest' %}">Contests</a></span>
-
-  {% if request.user.username == 'admin' %}
-  <span ><a  class="hello-msg" href="{% url 'createcontest' %}">Create Contest</a></span>
-  {% endif %}
 
   {% if request.user.username == '' %}
   <span ><a  class="hello-msg" href="{% url 'login' %}">Login</a></span>

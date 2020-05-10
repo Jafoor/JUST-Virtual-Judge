@@ -1,0 +1,56 @@
+{% extends 'front/main.html' %}
+
+{% block content %}
+
+{%  include 'front/status.html' %}
+
+<style>
+  .column {
+    float: left;
+    width: 100%;
+  }
+
+  #column #row h2 {
+    text-align: center;
+  }
+
+
+</style>
+
+<br>
+<h4  style="text-align: center;"><strong>{{details.ptitle}}</strong></h4>
+<br>
+{%if details.ptimelimit == 1%}
+<h5  style="text-align: center;"> Time Limit Per test :      {{details.ptimelimit}} second</h5>
+{% else %}
+<h5 style="text-align: center;"> Time Limit Per test :      {{details.ptimelimit}} seconds</h5>
+{% endif %}
+<h5 style="text-align: center;"> Memory Limit Per Test :      {{details.pmemorylimit}} megabytes</h5>
+
+<br>
+<h5>Problem Description</h5>
+<p>
+  {{details.pdescription | safe}}
+</p>
+<br>
+<h5>Input</h5>
+<p>
+  {{details.pinput | safe}}
+</p>
+<br>
+<h5>Outout</h5>
+<p>
+  {{details.poutput | safe}}
+</p>
+<br>
+<h5>Example Input Output Section</h5>
+<h6> input</h6>
+<p>{{details.pexinput | safe}}</p>
+<br>
+<h6> output</h6>
+<p>{{details.pexoutput | safe}}</p>
+
+<br>
+<h5>Note</h5>
+<p>{{details.pnote | safe}}</p>
+{% endblock %}

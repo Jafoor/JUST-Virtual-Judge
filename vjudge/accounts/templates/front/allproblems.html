@@ -1,0 +1,69 @@
+{% extends 'front/main.html' %}
+
+{% block content %}
+
+{%  include 'front/status.html' %}
+
+<style>
+#customers {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#customers td, #customers th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#customers tr:nth-child(even){background-color: #f2f2f2;}
+
+#customers tr:hover {background-color: #ddd;}
+
+#customers th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  align : center;
+  background-color: #4CAF50;
+  color: white;
+}
+.column {
+  float: left;
+  width: 50%;
+  padding-left: 50px;
+}
+
+</style>
+
+<body>
+
+  <br>
+
+<div class="row">
+  <div class = "column">
+<table id="customers">
+  <tr align = center>
+    <th>ID</th>
+    <th>Problem Title</th>
+    <th>Type</th>
+    <th>User View</th>
+  </tr>
+  {% for i in allproblem %}
+  <tr>
+    <td><a href="{% url 'problem' pk=i.pk %}">{{i.pid}}</td>
+    <td> {{i.ptitle}}</td>
+    <td>{{i.ptype}}</td>
+    <td>{{i.pshow}}</td>
+
+  </tr>
+  {% endfor %}
+
+
+</table>
+</div>
+
+</div>
+
+
+{% endblock %}

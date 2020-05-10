@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'accounts',
     'contests',
     'django_filters',
+    'problems',
 ]
 
 MIDDLEWARE = [

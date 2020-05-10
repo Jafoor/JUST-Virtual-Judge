@@ -1,0 +1,54 @@
+{% extends 'back/dashboard.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+#customers {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#customers td, #customers th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#customers tr:nth-child(even){background-color: #f2f2f2;}
+
+#customers tr:hover {background-color: #ddd;}
+
+#customers th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+</style>
+</head>
+<body>
+
+<table id="customers">
+  <tr>
+    <th>ID</th>
+    <th>Problem Title</th>
+    <th>Type</th>
+    <th>User View</th>
+    <th>Tags</th>
+  </tr>
+  {% for i in allproblem %}
+  <tr>
+    <td>{{i.pid}}</td>
+    <td> {{i.ptitle}}</td>
+    <td>{{i.ptype}}</td>
+    <td>{{i.pshow}}</td>
+    <td>{{i.ptags}}</td>
+  </tr>
+  {% endfor %}
+
+
+</table>
+
+
+{% endblock %}
