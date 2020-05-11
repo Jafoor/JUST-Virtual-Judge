@@ -24,6 +24,9 @@ def registerPage(request):
                 form.save()
                 user = form.cleaned_data.get('username')
                 messages.success(request, 'Account was created for ' + user)
+                print(user)
+                b = Profile(uname = user)
+                b.save()
                 return redirect('login')
 
         context = {'form': form}
@@ -55,6 +58,7 @@ def logoutUser(request):
 #@login_required(login_url = '/loginPage/')
 def home(request):
 
+    Profile.objects.all().delete()
     contests = Contest.objects.all()
     total_contests = contests.count()
     usertype = request.user.username
@@ -66,3 +70,12 @@ def home(request):
 
 def aboutpage(request):
     return render(request, 'front/about.html')
+
+def profile(request):
+
+    pro = Profile.objects.get(uname = request.user.username)
+    print(request.user.username)
+
+
+
+    return render(request, 'front/profile.html',{'pro':pro})

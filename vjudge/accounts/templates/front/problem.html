@@ -1,5 +1,5 @@
 {% extends 'front/main.html' %}
-
+{% load static %}
 {% block content %}
 
 {%  include 'front/status.html' %}
@@ -53,4 +53,34 @@
 <br>
 <h5>Note</h5>
 <p>{{details.pnote | safe}}</p>
+<br>
+<br>
+<br>
+
+<form id="problem" action="" method="post">
+        {% csrf_token %}
+        <label for="language" class="control-label">Language: </label>
+        <select name="language" id="language-select" >
+            {% for x in language %}
+                <option value="{{ x }}">{{ x }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <strong>Pasete Your Code Here : </strong>
+        <br>
+    <!--
+        <textarea style="height:400px;" name="code" class="form-control" placeholder="Type your code here..."></textarea>
+    -->
+
+        <!-- New CODE -->
+        <div style="padding-bottom: 18px; font-weight:bold " ><h4>CONTEST DESCRIPTION</h4><br/>
+        <textarea id="data_11" name="code" style="" rows="8" class="form-control" placeholder="Describe about the contest"></textarea>
+        </div>
+
+
+
+        <div class="d-flex justify-content-center mt-3 login_container">
+        <input class="btn btn-danger" type="submit" value="Create">
+        </div>
+    </form>
 {% endblock %}

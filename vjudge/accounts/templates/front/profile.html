@@ -1,0 +1,69 @@
+{% extends 'front/main.html' %}
+{% load static %}
+{% block content %}
+
+{%  include 'front/status.html' %}
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+/* Create two equal columns that floats next to each other */
+.column {
+  float: left;
+  width: 33%;
+  padding-top: 50px;
+  padding-right: 30px;
+  padding-bottom: 50px;
+  padding-left: 80px;
+
+   /* Should be removed. Only for demonstration */
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+
+  padding
+}
+</style>
+</head>
+<body>
+
+<div class="row">
+  <div class="column" >
+  <h3 style="color:White; font-size:30px; padding-left: 40px;" >{{request.user.username}}</h3>
+    <br>
+    <div class="gallery">
+  <a target="_blank">
+    <img src="{% static 'images/profile1.png'%}" alt="Cinque Terre" width="200" height="200">
+  </a>
+  <div class="desc"> <h6 style="color:White; font-size:15px;"> From </h6> {% if pro.university == '' %} Not Defined {% else %} <h6> &hearts; {{pro.university}}</h6> {% endif %}</div>
+</div>
+  </div>
+  <div class="column" style="">
+    <h5 style ="color:White; font-size:20px;"> Total Problem:</h5>
+    <br>
+    <h6 style ="color:blueviolet; padding-left: 40px; font-size:15px;">Submission : {{pro.totalsub}}</h6>
+    <br>
+    <h6 style ="color:green; padding-left: 40px; font-size:15px;"> Accepted : {{pro.totalac}}</h6>
+    <br>
+    <h6 style ="color:darkred; padding-left: 40px; font-size:15px;"> Wrong Answer : {{pro.totalwa}}</h6>
+    <br>
+    <h6 style ="color:deeppink; padding-left: 40px; font-size:15px;"> Time limit : {{pro.totaltle}}</h6>
+    <br>
+    <h6 style ="color:navy; padding-left: 40px; font-size:15px;"> Memory limit : {{pro.totalme}}</h6>
+    <br>
+    <h6 style ="color:forestgreen; padding-left: 40px; font-size:15px;"> Solved problems : {{pro.totalme}}</h6>
+    <br>
+    <h6 style ="color:indigo; padding-left: 40px; font-size:15px;"> Perticipation in Contest : {{pro.totalme}}</h6>
+  </div>
+  <div class="column" style="">
+    <h2>Column 2</h2>
+    <p>Some text..</p>
+  </div>
+</div>
+{% endblock %}

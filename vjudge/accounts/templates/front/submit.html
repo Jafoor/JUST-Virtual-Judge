@@ -1,70 +1,274 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title>Editor</title>
-  <style type="text/css" media="screen">
-
-	.ace_editor {
-		border: 1px solid lightgray;
-		margin: auto;
-		height: 200px;
-		width: 80%;
-	}
-	.scrollmargin {
-		height: 80px;
-        text-align: center;
-	}
-    </style>
-</head>
 <body>
-<pre id="editor1">autoresizing editor</pre>
-<div class="scrollmargin"></div>
-<pre id="editor2">minHeight = 2 lines</pre>
-<div class="scrollmargin"></div>
-<pre id="editor3" style="width: 40%;"></pre>
-<div class="scrollmargin"></div>
-<pre id="editor"></pre>
 
-<script src="kitchen-sink/require.js"></script>
-<script>
-// setup paths
-require.config({paths: { "ace" : "../lib/ace"}});
-// load ace and extensions
-require(["ace/ace"], function(ace) {
-    var editor1 = ace.edit("editor1", {
-        theme: "ace/theme/tomorrow_night_eighties",
-        mode: "ace/mode/html",
-        maxLines: 30,
-        wrap: true,
-        autoScrollEditorIntoView: true
-    });
 
-    var editor2 = ace.edit("editor2", {
-        theme: "ace/theme/tomorrow_night_blue",
-        mode: "ace/mode/html",
-        autoScrollEditorIntoView: true,
-        maxLines: 30,
-        minLines: 2
-    });
+<form id="problem" action="" method="post">
+        {% csrf_token %}
+        <label for="language" class="control-label">Language: </label>
+        <select name="language" id="language-select">
+            {% for x in p.language %}
+                <option value="{{ x }}">{{ x }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <strong>Code:</strong>
+        <br>
+    <!--
+        <textarea style="height:400px;" name="code" class="form-control" placeholder="Type your code here..."></textarea>
+    -->
 
-    var editor = ace.edit("editor3");
-    editor.setOptions({
-        autoScrollEditorIntoView: true,
-        maxLines: 8
-    });
-    editor.renderer.setScrollMargin(10, 10, 10, 10);
+        <!-- New CODE -->
+        <textarea id="code-submit" name="code" style="display:none"></textarea>
+        <div id="editor"></div>
+        <script src="{% static 'ace-builds/src-noconflict/ace.js' %}" type="text/javascript" charset="utf-8"></script>
+        <script>
+            var editor = ace.edit("editor");
+            editor.setTheme("ace/theme/xcode");
+            editor.getSession().setMode("ace/mode/c_cpp");
+            document.getElementById('editor').style.fontSize='16px';
 
-    var editor = ace.edit("editor");
-    editor.setTheme("ace/theme/tomorrow");
-    editor.session.setMode("ace/mode/html");
-    editor.setAutoScrollEditorIntoView(true);
-    editor.setOption("maxLines", 100);
+            $(document).ready(function () {
+
+
+                $('#problem').on('submit',function (e) {
+                    if(editor.getSession().getValue() == '') {
+                        return false;
+                    }
+
+                    $('#code-submit').val(editor.getSession().getValue());
+                });
+                init();
+                 {% if sub %}
+                    editor.setValue('{{ sub.code|escapejs }}');
+                    editor.gotoLine(editor.session.getLength());
+                    var element = document.getElementById('language-select');
+                    element.value = '{{ sub.run.language }}';
+                {% endif %}
+
+                function init(){
+                    var val = $('#language-select option:selected').val();
+                    changeSyntax(val);
+                }
+
+                function changeSyntax(val){
+                    switch (val){
+                        case 'Java':
+                            editor.getSession().setMode("ace/mode/java");
+                            break;
+                        case 'C':
+                        case 'C++':
+                            editor.getSession().setMode("ace/mode/c_cpp");
+                            break;
+                        case 'Python':
+                        case 'Python3':
+                            editor.getSession().setMode("ace/mode/python");
+                            break;
+                        case 'C#':
+                            editor.getSession().setMode("ace/mode/CSharp");
+                    }
+                }
+
+                $('#language-select').change(function() {
+                    var val = $('#language-select option:selected').val();
+                    changeSyntax(val);
+                });
+            });
+        </script>
+
+        <style type="text/css" media="screen">
+            #editor {
+                height:400px;
+            }
+        </style>
+        <!-- END OF NEW CODE -->
+
+        <br>
+        <button type="submit" class="btn btn-success">Submit</button>
+    </form>
+
+ <script>
+
+require.config({
+    baseUrl: 'https://microsoft.github.io/monaco-editor/node_modules/monaco-editor/min/'
 });
-</script>
 
-<script src="./show_own_source.js"></script>
+
+var editor = null,
+    diffEditor = null;
+
+$(document).ready(function() {
+    require(['vs/editor/editor.main'], function() {
+        var MODES = (function() {
+            var modesIds = monaco.languages.getLanguages().map(function(lang) {
+                return lang.id;
+            });
+            modesIds.sort();
+
+            return modesIds.map(function(modeId) {
+                return {
+                    modeId: modeId,
+                    sampleURL: 'https://microsoft.github.io/monaco-editor/index/samples/sample.' + modeId + '.txt'
+                };
+            });
+        })();
+
+        for (var i = 0; i < MODES.length; i++) {
+            var o = document.createElement('option');
+            o.textContent = MODES[i].modeId;
+            $(".language-picker").append(o);
+        }
+        $(".language-picker").change(function() {
+            loadSample(MODES[this.selectedIndex]);
+        });
+        $('.language-picker').selectpicker({
+            size: 10
+        });
+        loadSample(MODES[0]);
+
+        $(".theme-picker").change(function() {
+            changeTheme(this.selectedIndex);
+        });
+        $('.theme-picker').selectpicker({
+            size: 3
+        });
+
+        loadDiffSample();
+
+        $('#inline-diff-checkbox').change(function() {
+            diffEditor.updateOptions({
+                renderSideBySide: !$(this).is(':checked')
+            });
+        });
+    });
+
+    window.onresize = function() {
+        if (editor) {
+            editor.layout();
+        }
+        if (diffEditor) {
+            diffEditor.layout();
+        }
+    };
+});
+
+function loadSample(mode) {
+    $.ajax({
+        type: 'GET',
+        url: mode.sampleURL,
+        dataType: 'text',
+        beforeSend: function() {
+            $('.loading.editor').show();
+        },
+        error: function() {
+            if (editor) {
+                if (editor.getModel()) {
+                    editor.getModel().dispose();
+                }
+                editor.dispose();
+                editor = null;
+            }
+            $('.loading.editor').fadeOut({
+                duration: 200
+            });
+            $('#editor').empty();
+            $('#editor').append('<p class="alert alert-error">Failed to load ' + mode.modeId + ' sample</p>');
+        }
+    }).done(function(data) {
+        if (!editor) {
+            $('#editor').empty();
+            editor = monaco.editor.create(document.getElementById('editor'), {
+                model: null,
+            });
+        }
+
+        var oldModel = editor.getModel();
+        var newModel = monaco.editor.createModel(data, mode.modeId);
+        editor.setModel(newModel);
+        if (oldModel) {
+            oldModel.dispose();
+        }
+        $('.loading.editor').fadeOut({
+            duration: 300
+        });
+    });
+}
+
+function loadDiffSample() {
+
+    var onError = function() {
+        $('.loading.diff-editor').fadeOut({
+            duration: 200
+        });
+        $('#diff-editor').append('<p class="alert alert-error">Failed to load diff editor sample</p>');
+    };
+
+    $('.loading.diff-editor').show();
+
+    var lhsData = null,
+        rhsData = null,
+        jsMode = null;
+
+    $.ajax({
+        type: 'GET',
+        url: 'https://microsoft.github.io/monaco-editor/index/samples/diff.lhs.txt',
+        dataType: 'text',
+        error: onError
+    }).done(function(data) {
+        lhsData = data;
+        onProgress();
+    });
+
+    $.ajax({
+        type: 'GET',
+        url: 'https://microsoft.github.io/monaco-editor/index/samples/diff.rhs.txt',
+        dataType: 'text',
+        error: onError
+    }).done(function(data) {
+        rhsData = data;
+        onProgress();
+    });
+
+    function onProgress() {
+        if (lhsData && rhsData) {
+            diffEditor = monaco.editor.createDiffEditor(document.getElementById('diff-editor'), {
+                enableSplitViewResizing: false
+            });
+
+            var lhsModel = monaco.editor.createModel(lhsData, 'text/javascript');
+            var rhsModel = monaco.editor.createModel(rhsData, 'text/javascript');
+
+            diffEditor.setModel({
+                original: lhsModel,
+                modified: rhsModel
+            });
+
+            $('.loading.diff-editor').fadeOut({
+                duration: 300
+            });
+        }
+    }
+}
+
+function changeTheme(theme) {
+    var newTheme = (theme === 1 ? 'vs-dark' : (theme === 0 ? 'vs' : 'hc-black'));
+    if (editor) {
+        editor.updateOptions({
+            'theme': newTheme
+        });
+    }
+    if (diffEditor) {
+        diffEditor.updateOptions({
+            'theme': newTheme
+        });
+    }
+}
+</script>
 
 </body>
 </html>

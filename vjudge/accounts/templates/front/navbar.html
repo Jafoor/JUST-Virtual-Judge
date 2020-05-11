@@ -19,7 +19,7 @@
       </li>
     </ul>
     {% if request.user.username != '' %}
-    <span class="hello-msg">Hello, {{request.user}}</span>
+    <span class="hello-msg"> Hello, <a class="hello-msg" href="{% url 'profile' %}"> {{request.user}} </a></span>
     {% endif %}
 
     {% if request.user.username == 'admin' %}
