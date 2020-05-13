@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<link rel="stylesheet" href="{% static 'multiselect/bootstrap-multiselect.css'%}" type="text/css"/>
+
+<script   src="https://code.jquery.com/jquery-3.2.1.min.js"   integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="   crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script type="text/javascript" src="{% static 'multiselect/bootstrap-multiselect.js'%}"></script>
+</head>
+<body>
+<br/>
+<div style="width:70%; margin:0 auto; text-align:center">
+
+<br/>
+
+
+<h3>Bootstrap Multi Select Box With Select All and Search Feature</h3>
+<form class="" action="" method="post">
+
+{% csrf_token %}
+<select id="multiselectwithsearch" multiple="multiple" name = "cars">
+    {% for i in probs%}
+    <option value="{{i.pk}}">{{i.pid}}</option>
+    {% endfor %}
+</select>
+<input type="submit" value = "submit">
+</form>
+<script>
+$(function() {
+ $('#multiselect').multiselect();
+
+ $('#multiselectwithsearch').multiselect({
+            includeSelectAllOption: true,
+            enableFiltering: true,
+            enableCaseInsensitiveFiltering: true,
+            filterPlaceholder: 'Search for something...'
+        });
+});
+</script>
+<br/>
+<br/>
+
+
+
+</div>
+</body>
+</html>

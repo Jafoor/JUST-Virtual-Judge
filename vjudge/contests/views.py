@@ -8,9 +8,44 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 import datetime
 from django.utils.timezone import utc
+from problems.models import Problem
 #from contests.models import *
 
 # Create your views here.
+
+def listToString(s):
+
+    str1 = ""
+    l = len(s)
+    i = 0
+    for ele in s:
+        if(i != l-1):
+            str1 += ele
+            str1 += ','
+        else:
+            str1 += ele
+
+    return str1
+
+
+def setproblem(request,pk):
+
+    probs = Problem.objects.all()
+    if request.method == 'POST':
+        val = request.POST.getlist('cars')
+        if len(val)==0 or len(val)>10:
+            messages.info(request, "You Must add 1 to 10 Problem")
+            return redirect('setproblem',pk=pk)
+
+        p = listToString(val)
+        print(p)
+        cnt = Contest.objects.get(pk=pk)
+        cnt.problems = p
+        cnt.save()
+        return redirect('contest')
+
+
+    return render(request, 'front/setproblem.html',{'probs': probs})
 
 def contestpage(request):
 
@@ -93,9 +128,9 @@ def createcontestpage(request):
         password = request.POST.get('cpassword')
         b = Contest(ctitle = title , cbeginingdate = beginingdate, cdescription = description, cbeginingtime = beginingtime, clength = length, cpassword = password)
         b.save()
-        #print(title)
-
-        return redirect('contest')
+        #print(1111)
+        #print(b.pk)
+        return redirect('setproblem',pk=b.pk)
 
     return render(request, 'back/createcontest.html')
 
@@ -144,17 +179,15 @@ def contesttask(request,pk):
                    tday = '0' + str(tday)
                if len(str(tmonth)) == 1:
                    tmonth = '0' + str(tmonth)
-               thour = now.year
+               thour = now.hour
                tmin = now.minute
                if len(str(thour)) == 1:
                    tday = '0' + str(tday)
                if len(str(tmonth)) == 1:
                    tmonth = '0' + str(tmonth)
 
-               if (int(tyear) > int(year)) or (int(tmonth) > int(month) and int(tyear) == int(year)) or (int(tday) >= int(day) and int(tmonth) == int(month) and int(tyear) == int(year)):
-                    print(1)
-                    if (str(thour) > stime[0]) or (str(thour) == stime[0] and str(tmin) >= stime[1]):
-                        return redirect('tasks', pk=contestdetails.pk)
+               if (int(tyear) > int(year)) or (int(tmonth) > int(month) and int(tyear) == int(year)) or (int(tday) >= int(day) and int(tmonth) == int(month) and int(tyear) == int(year)) or (str(thour) > stime[0] and int(tday) >= int(day) and int(tmonth) == int(month) and int(tyear) == int(year)) or ((str(thour) == stime[0] and str(tmin) >= stime[1]) and int(tday) >= int(day) and int(tmonth) == int(month) and int(tyear) == int(year)):
+                    return redirect('tasks', pk=contestdetails.pk)
                else:
                    messages.info(request, "Contest Not started Yet")
                    return redirect('contesttask', pk=contestdetails.pk)
@@ -174,4 +207,17 @@ def contesttask(request,pk):
 
 def tasks(request,pk):
 
-    return render(request, 'front/tasks.html')
+    con = Contest.objects.get(pk = pk)
+    pks = con.problems
+    pks = pks.split(",")
+    probs = []
+    for i in pks:
+        id = Problem.objects.get(pk=i)
+        probs.append(id.pid)
+    r = pk
+
+    return render(request, 'front/tasks.html',{'probs':probs,'pks':pks,'r':r})
+
+def contestproblem(request,pk1,pk2):
+
+    return render(request, 'front/contestproblem.html')

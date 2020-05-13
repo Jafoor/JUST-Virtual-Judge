@@ -1,1 +1,85 @@
-hlw orld
+
+{% extends 'front/main.html' %}
+
+{% block content %}
+
+{%  include 'front/status.html' %}
+
+<style>
+  body,
+  html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #7abecc !important;
+  }
+
+  .user_card {
+    width: 1000px;
+    margin-top: auto;
+    margin-bottom: auto;
+    background: #74cfbf;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 20px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    -moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 5px;
+
+
+
+  }
+
+  .hl{
+
+    text-align: center;
+    font-weight: bold;
+    color: white;
+    padding: 20px;
+  }
+
+</style>
+
+
+<br>
+<br>
+<div class="container h-100">
+  <div class="d-flex justify-content-center h-100">
+    <div class="user_card">
+      <h2 class = "hl" > Problems </h2>
+      <table class="table table-bordered" width = "500">
+      	<thead>
+      		<tr class="hl" >
+      			<th scope="col" width = "60%"  >Tasks</th>
+
+      		</tr>
+      	</thead>
+
+        {% for i in pks %}
+      	<tbody>
+      		<tr>
+      			<td align = "center">
+      				<a href="{% url 'contestproblem' pk1=r pk2=i%}"> A </a>
+      			</td>
+      		</tr>
+      	</tbody>
+        {% endfor %}
+      </table>
+
+      <script>
+    window.setInterval('refresh()', 30000); 	// Call a function every 10000 milliseconds (OR 10 seconds).
+
+  // Refresh or reload page.
+    function refresh() {
+      window .location.reload();
+  }
+    </script>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

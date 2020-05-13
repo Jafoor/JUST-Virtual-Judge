@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block content %}
+
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
 <link rel="stylesheet" type="text/css" href="{% static '/home/css/main.css' %}">
@@ -44,14 +45,16 @@
          </div>
 </div>
 
+<br>
+
  <div class="form-group" align = "center">
-         <div class="col-md-4">
+         <div class="col-md-6">
            <h4 align = "center">Time Limit<span style="color: red;"> *</span></h4>
                <input type="number" id = "timelimit" name="ptimelimit" rows = "1" class="form-control" placeholder="Ex: 2" required></input>
                <br>
         </div>
 
-          <div class="col-md-4">
+          <div class="col-md-6">
             <h4 align = "center">Memory Limit<span style="color: red;"> *</span></h4>
                 <input type="number" id = "memorylimit" name="pmemorylimit" rows = "1" class="form-control" placeholder="Ex : 1024" required></input>
           </div>
