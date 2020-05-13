@@ -9,5 +9,6 @@ urlpatterns = [
     url(r'^contest/tasks/(?P<pk>\d+)/$', views.tasks, name = "tasks"),
     url(r'^setproblem/(?P<pk>\d+)/$',views.setproblem, name = "setproblem"),
     url(r'^contest/(?P<pk1>\d+)/problem/(?P<pk2>\d+)/$', views.contestproblem, name = "contestproblem"),
+    url(r'^ranklist/$',views.ranklist, name = "ranklist"),
 
 ]

@@ -58,11 +58,11 @@
       		</tr>
       	</thead>
 
-        {% for i in pks %}
+        {% for i in probs %}
       	<tbody>
       		<tr>
       			<td align = "center">
-      				<a href="{% url 'contestproblem' pk1=r pk2=i%}"> A </a>
+      				<a href="{% url 'contestproblem' pk1=r pk2=i.pk%}"> {{i}} </a>
       			</td>
       		</tr>
       	</tbody>

@@ -43,5 +43,8 @@ class Ranklist(models.Model):
     tpb9 = models.DecimalField(default=0.00,max_digits=19, decimal_places=4)
     tpb10 = models.DecimalField(default=0.00,max_digits=19, decimal_places=4)
 
+    totalac = models.IntegerField(default = 0, null=True)
+    totalpoint = models.DecimalField(default=0.00,max_digits=19, decimal_places=4)
+
     def __str__(self):
         return self.user
