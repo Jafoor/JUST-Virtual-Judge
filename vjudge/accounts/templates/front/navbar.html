@@ -26,9 +26,6 @@
     <span ><a  class="hello-msg" href="{% url 'dashboard' %}" > Dashboard</a></span>
     {% endif %}
 
-    {% if request.user.username == 'admin' %}
-    <span ><a  class="hello-msg" href="{% url 'createcontest' %}">Create Contest</a></span>
-    {% endif %}
 
   </div>
 

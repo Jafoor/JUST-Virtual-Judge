@@ -227,15 +227,15 @@ def cmp(a, b):
 
 def whichproblem(x):
 
-    list = ['spb1','spb2','spb3','spb4','spb5','spb6','spb7','spb8','spb9','spb10']
+    list = ['A','B','C','D','E','F','H','I','J','K']
 
-    return list[int(x)-1]
+    return list[int(x)]
 
 def Totalmarkproblem(x):
 
     list = ['tpb1','tpb2','tpb3','tpb4','tpb5','tpb6','tpb7','tpb8','tpb9','tpb10']
 
-    return list[int(x)-1]
+    return list[int(x)]
 
 
 def contestproblem(request,pk1,pk2):
@@ -245,8 +245,83 @@ def contestproblem(request,pk1,pk2):
     details = Problem.objects.get(pk=pk2)
     language = ['Java','NodeJS','C','C++','PHP','Python 2','Python 3','Kotlin','GO Lang','C#']
 
+    i = Contest.objects.get(pk=pk1)
+    sdate = i.cbeginingdate
+    sdate = sdate.split("-")
+    day = sdate[2]
+    year = sdate[0]
+    month = sdate[1]
+
+    if len(str(day)) == 1:
+        day = '0' + str(day)
+    if len(str(month)) == 1:
+        month = '0' + str(month)
+
+    stime = i.cbeginingtime
+    stime = stime.split(":")
+
+    if len(str(stime[0])) == 1:
+        stime[0] = '0' + str(stime[0])
+    if len(str(stime[1])) == 1:
+        stime[1] = '0' + str(stime[1])
+    p1 = day+"/"+month+"/"+year+" "+stime[0]+":"+stime[1]+":"+str(00)
+    startdate = datetime.datetime.strptime(p1, '%d/%m/%Y %H:%M:%S')
+    today = datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
+    today = datetime.datetime.strptime(today,'%d/%m/%Y %H:%M:%S')
+    #print(today)
+    #print(startdate)
+    diff = today - startdate
+    diff = today - startdate
+    if int(diff.days) < 0:
+        return redirect('contesttask',pk=pk1)
+
 
     if request.method == 'POST':
+
+        #Checking if Finished...
+        i = Contest.objects.get(pk=pk1)
+        sdate = i.cbeginingdate
+        sdate = sdate.split("-")
+        day = sdate[2]
+        year = sdate[0]
+        month = sdate[1]
+
+        if len(str(day)) == 1:
+            day = '0' + str(day)
+        if len(str(month)) == 1:
+            month = '0' + str(month)
+
+        stime = i.cbeginingtime
+        stime = stime.split(":")
+
+        if len(str(stime[0])) == 1:
+            stime[0] = '0' + str(stime[0])
+        if len(str(stime[1])) == 1:
+            stime[1] = '0' + str(stime[1])
+        p1 = day+"/"+month+"/"+year+" "+stime[0]+":"+stime[1]+":"+str(00)
+        startdate = datetime.datetime.strptime(p1, '%d/%m/%Y %H:%M:%S')
+        today = datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
+        today = datetime.datetime.strptime(today,'%d/%m/%Y %H:%M:%S')
+        #print(today)
+        #print(startdate)
+        diff = today - startdate
+
+        ln = i.clength
+        ln = ln.split(":")
+        enddate = startdate + datetime.timedelta(hours=int(ln[0]), minutes = int(ln[1]), seconds=int(ln[2]) )
+
+        finished = str(enddate.day)+"/"+str(enddate.month)+"/"+str(enddate.year)+" "+str(enddate.hour)+":"+str(enddate.minute)+":"+str(enddate.second)
+        finished = datetime.datetime.strptime(finished, '%d/%m/%Y %H:%M:%S')
+        #print(finished)
+        diff1 = finished-today
+        #print(diff)
+        #print(diff1)
+        if diff.days>=0 and diff1.days<0:
+            return redirect('contesttask',pk=pk1)
+
+
+
+
 
         # checking if user in contest:
         uname = request.user.username
@@ -267,6 +342,12 @@ def contestproblem(request,pk1,pk2):
             #Creating a new table for a new user:
             b = Ranklist(user = uname,contestid=pk1)
             b.save()
+
+        #Submissionid
+        bb = Submission(user = uname, contestid = pk1)
+        bb.save()
+        subid = bb.submissionid
+
         p = details.pexinput
         cleanr = re.compile(r'<[^>]+>')
         p = re.sub(cleanr,'',p)
@@ -309,11 +390,33 @@ def contestproblem(request,pk1,pk2):
             lan = 'nodejs'
             ver = 3
 
+        #submission language
+        bb.language = lan
+        bb.code = code
+        bb.problemid = pk2
+        bb.save()
+
         task = {"clientId": "c2eed3b46d56379f836878a45aadb27f", "clientSecret":"3c9b309578bd148a31033a22a62ae149deed3a00f3e5658937e2d34b6f165203", "script": code , "stdin" : p, "language" : lang, "versionIndex": ver}
         resp = requests.post("https://api.jdoodle.com/v1/execute", json = task)
         resp = resp.json()
         print(resp)
 
+
+        pbn = 0
+        prob = allusers.problems
+        prob = prob.split(",")
+        for i in prob:
+            if i == pk2:
+                #pbn += 1
+                break
+            else:
+                pbn += 1
+
+        spb = whichproblem(pbn)
+        tpb = Totalmarkproblem(pbn)
+
+        bb.problemtitle = spb
+        bb.save()
         if resp['statusCode'] == 200:
             op = resp['output']
             timelimit = resp['cpuTime']
@@ -327,21 +430,11 @@ def contestproblem(request,pk1,pk2):
             gml = float(details.pmemorylimit) * 1024
             sml = (resp['memory'])
 
-            pbn = 0
-            prob = allusers.problems
-            prob = prob.split(",")
-            for i in prob:
-                if i == pk2:
-                    #pbn += 1
-                    break
-                else:
-                    pbn += 1
-
-            spb = whichproblem(pbn)
-            tpb = Totalmarkproblem(pbn)
             print(tpb)
             rls = Ranklist.objects.get(user = uname , contestid = pk1)
             if str(stl) == 'None' or str(sml) == 'None':
+                bb.status = 'Syntex Error'
+                bb.save()
                 if pbn == 0:
                     x = rsl.tpb1
                     x += 10
@@ -416,6 +509,8 @@ def contestproblem(request,pk1,pk2):
                 if float(stl) <= gtl :
                     if float(sml)<=gml :
                         if cmp(op,q) == True:
+                            bb.status = 'Accepted'
+                            bb.save()
                             if pbn == 0 and rls.spb1 == False:
                                 rls.spb1 = True
                                 x = rls.tpb1
@@ -477,6 +572,8 @@ def contestproblem(request,pk1,pk2):
                                 rls.tpb10 = x
                                 rls.save()
                         else:
+                            bb.status = 'Worng Answer'
+                            bb.save()
                             if pbn == 0:
                                 x = rls.tpb1
                                 x += 10
@@ -537,6 +634,8 @@ def contestproblem(request,pk1,pk2):
                                 rls.tpb10 = x
                                 rls.save()
                     else:
+                        bb.status = 'Memory Limit Exc.'
+                        bb.save()
                         if pbn == 0:
                             x = rls.tpb1
                             x += 10
@@ -597,6 +696,8 @@ def contestproblem(request,pk1,pk2):
                             rls.tpb10 = x
                             rls.save()
                 else:
+                    bb.status = 'Time Limit'
+                    bb.save()
                     if pbn == 0:
                         x = rls.tpb1
                         x += 10
@@ -660,14 +761,30 @@ def contestproblem(request,pk1,pk2):
 
         else:
             messages.info(request, "Rewrite Code with Correct Formate or select language correctly")
-            return redirect('contestproblem', pk1 = pk1, pk2=pk2)
+            return redirect('contestproblem', pk1=pk1, pk2=pk2)
 
-    return render(request, 'front/contestproblem.html',{'details':details,'language':language})
+    return render(request, 'front/contestproblem.html',{'details':details,'language':language,'r':pk1})
 
 
-def ranklist(request):
+def ranklist(request,pk):
 
-    users = Ranklist.objects.filter(contestid = 4).order_by('-totalac')
+    users = Ranklist.objects.filter(contestid = pk).order_by('-totalac', 'totalpoint')
     print(users)
+    contest = Contest.objects.get(pk=pk)
 
-    return render(request, 'front/ranklist.html')
+    s = 'A'
+    dic = {}
+    probs = contest.problems
+    x = 0
+    probs = probs.split(",")
+    for i in probs:
+        y = chr(ord(s)+x)
+        dic[y] = i
+        x += 1
+    print(dic)
+    r = pk
+
+    sz = len(dic)
+    print(sz)
+
+    return render(request, 'front/ranklist.html',{'users':users,'contest':contest,'dic':dic,'r':r,'sz':sz})

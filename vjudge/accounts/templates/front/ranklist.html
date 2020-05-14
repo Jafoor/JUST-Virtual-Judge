@@ -1,1 +1,289 @@
-<h1> You are here </h1>
+{% extends 'front/main.html' %}
+
+{% block content %}
+
+{%  include 'front/status.html' %}
+<style>
+  body,
+  html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #7abecc !important;
+  }
+
+  .user_card {
+    width: 1000px;
+    margin-top: auto;
+    margin-bottom: auto;
+    background: #74cfbf;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 20px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    -moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 5px;
+
+
+
+  }
+
+  .hl{
+
+    text-align: center;
+    font-weight: bold;
+    color: white;
+    padding: 20px;
+  }
+
+</style>
+<br>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#"> Contest Details</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarText">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="{% url 'tasks' pk=r %}">Problems</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'ranklist' pk=r %}">Standing</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Submissions</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<br>
+<div>
+  <h3 align="center">{{contest.ctitle}}</h3>
+</div>
+<br>
+<br>
+
+
+<div class="container h-100">
+  <div class="d-flex justify-content-center h-100">
+    <div class="user_card">
+      <table class="table table-bordered" width = "500">
+      	<thead>
+      		<tr class="hl" >
+      			<th scope="col" width = "15%"  >User</th>
+            <th scope="col" width = "10%"  >Accepted</th>
+            <th scope="col" width = "10%"  >Penalty</th>
+            {% for x,y in dic.items %}
+      			<th scope="col" width = "10%" align = "center">
+              <a href="{% url 'contestproblem' pk1=r pk2=y %}">
+                {{x}}</th>
+
+            {% endfor %}
+      		</tr>
+      	</thead>
+
+        {% for usr in users %}
+      	<tbody>
+          <tr class="hl" >
+      			<th scope="col" width = "15%"  >{{usr.user}}</th>
+            <th scope="col" width = "10%"  >{{usr.totalac}}</th>
+            <th scope="col" width = "10%"  >{{usr.totalpoint}}</th>
+
+            {% if sz >= 1%}
+            {% if usr.spb1  == True and usr.tpb1 != 0.0000%}
+      			<th scope="col" width = "10%" align = "center" style = "background-color: green;">
+                AC
+                </th>
+              {% elif usr.tpb1 != 0.000%}
+              <th scope="col" width = "10%" align = "center" style = "background-color: red;">
+                  WA
+                  </th>
+              {% else %}
+              <th scope="col" width = "10%" align = "center" style = "background-color: ;">
+
+                  </th>
+              {%endif%}
+
+            {% endif %}
+
+
+            {% if sz >= 2%}
+            {% if usr.spb2  == True and usr.tpb2 != 0.0000%}
+      			<th scope="col" width = "10%" align = "center" style = "background-color: green;">
+                AC
+                </th>
+              {% elif usr.tpb2 != 0.000%}
+              <th scope="col" width = "10%" align = "center" style = "background-color: red;">
+                  WA
+                  </th>
+              {% else %}
+              <th scope="col" width = "10%" align = "center" style = "background-color: ;">
+
+                  </th>
+              {%endif%}
+
+            {% endif %}
+
+
+            {% if sz >= 3%}
+            {% if usr.spb3  == True and usr.tpb3 != 0.0000%}
+            <th scope="col" width = "10%" align = "center" style = "background-color: green;">
+                AC
+                </th>
+              {% elif usr.tpb3 != 0.000%}
+              <th scope="col" width = "10%" align = "center" style = "background-color: red;">
+                  WA
+                  </th>
+              {% else %}
+              <th scope="col" width = "10%" align = "center" style = "background-color: ;">
+
+                  </th>
+              {%endif%}
+
+            {% endif %}
+
+            {% if sz >= 4%}
+            {% if usr.spb4  == True and usr.tpb4 != 0.0000%}
+            <th scope="col" width = "10%" align = "center" style = "background-color: green;">
+                AC
+                </th>
+              {% elif usr.tpb4 != 0.000%}
+              <th scope="col" width = "10%" align = "center" style = "background-color: red;">
+                  WA
+                  </th>
+              {% else %}
+              <th scope="col" width = "10%" align = "center" style = "background-color: ;">
+
+                  </th>
+              {%endif%}
+
+            {% endif %}
+
+            {% if sz >= 5%}
+            {% if usr.spb5  == True and usr.tpb5 != 0.0000%}
+            <th scope="col" width = "10%" align = "center" style = "background-color: green;">
+                AC
+                </th>
+              {% elif usr.tpb5 != 0.000%}
+              <th scope="col" width = "10%" align = "center" style = "background-color: red;">
+                  WA
+                  </th>
+              {% else %}
+              <th scope="col" width = "10%" align = "center" style = "background-color: ;">
+
+                  </th>
+              {%endif%}
+
+            {% endif %}
+
+            {% if sz >= 6%}
+            {% if usr.spb6  == True and usr.tpb6 != 0.0000%}
+            <th scope="col" width = "10%" align = "center" style = "background-color: green;">
+                AC
+                </th>
+              {% elif usr.tpb6 != 0.000%}
+              <th scope="col" width = "10%" align = "center" style = "background-color: red;">
+                  WA
+                  </th>
+              {% else %}
+              <th scope="col" width = "10%" align = "center" style = "background-color: ;">
+
+                  </th>
+              {%endif%}
+
+            {% endif %}
+
+            {% if sz >= 7%}
+            {% if usr.spb7  == True and usr.tpb7 != 0.0000%}
+            <th scope="col" width = "10%" align = "center" style = "background-color: green;">
+                AC
+                </th>
+              {% elif usr.tpb7 != 0.000%}
+              <th scope="col" width = "10%" align = "center" style = "background-color: red;">
+                  WA
+                  </th>
+              {% else %}
+              <th scope="col" width = "10%" align = "center" style = "background-color: ;">
+
+                  </th>
+              {%endif%}
+
+            {% endif %}
+
+            {% if sz >= 8%}
+            {% if usr.spb8  == True and usr.tpb8 != 0.0000%}
+            <th scope="col" width = "10%" align = "center" style = "background-color: green;">
+                AC
+                </th>
+              {% elif usr.tpb8 != 0.000%}
+              <th scope="col" width = "10%" align = "center" style = "background-color: red;">
+                  WA
+                  </th>
+              {% else %}
+              <th scope="col" width = "10%" align = "center" style = "background-color: ;">
+
+                  </th>
+              {%endif%}
+
+            {% endif %}
+
+            {% if sz >= 9%}
+            {% if usr.spb9  == True and usr.tpb9 != 0.0000%}
+            <th scope="col" width = "10%" align = "center" style = "background-color: green;">
+                AC
+                </th>
+              {% elif usr.tpb9 != 0.000%}
+              <th scope="col" width = "10%" align = "center" style = "background-color: red;">
+                  WA
+                  </th>
+              {% else %}
+              <th scope="col" width = "10%" align = "center" style = "background-color: ;">
+
+                  </th>
+              {%endif%}
+
+            {% endif %}
+
+            {% if sz >= 10%}
+            {% if usr.spb10  == True and usr.tpb10 != 0.0000%}
+            <th scope="col" width = "10%" align = "center" style = "background-color: green;">
+                AC
+                </th>
+              {% elif usr.tpb10 != 0.000%}
+              <th scope="col" width = "10%" align = "center" style = "background-color: red;">
+                  WA
+                  </th>
+              {% else %}
+              <th scope="col" width = "10%" align = "center" style = "background-color: ;">
+
+                  </th>
+              {%endif%}
+
+            {% endif %}
+
+
+      		</tr>
+      	</tbody>
+        {% endfor %}
+      </table>
+
+      <script>
+    window.setInterval('refresh()', 1000000); 	// Call a function every 10000 milliseconds (OR 10 seconds).
+
+  // Refresh or reload page.
+    function refresh() {
+      window .location.reload();
+  }
+    </script>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

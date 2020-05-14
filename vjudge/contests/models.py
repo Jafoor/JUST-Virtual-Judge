@@ -48,3 +48,41 @@ class Ranklist(models.Model):
 
     def __str__(self):
         return self.user
+
+class Submission(models.Model):
+
+    submissionid = models.AutoField(primary_key=True)
+    user = models.CharField(default = "", null = True, max_length=50)
+    contestid = models.IntegerField(null = True)
+    code = models.TextField(default="", null = True)
+    language = models.CharField(default="", null = True,max_length=50)
+    status = models.CharField(default="",null=True,max_length=50)
+    problemid = models.CharField(default="",null=True,max_length=50)
+    problemtitle = models.CharField(default="",null=True,max_length=100)
+
+    def __str__(self):
+        return self.user
+
+
+"""
+Initialize migrations for your existing models:
+
+./manage.py makemigrations myapp
+Fake migrations for existing models:
+
+./manage.py migrate --fake myapp
+Add the new field to myapp.models:
+
+from django.db import models
+
+class MyModel(models.Model):
+    ... #existing fields
+    newfield = models.CharField(max_length=100) #new field
+Run makemigrations again (this will add a new migration file in migrations folder that add the newfield to db):
+
+./manage.py makemigrations myapp
+Run migrate again:
+
+./manage.py migrate myapp
+
+"""
