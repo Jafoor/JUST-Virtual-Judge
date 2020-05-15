@@ -12,6 +12,7 @@ from problems.models import Problem
 import re
 import requests
 import operator
+from accounts.models import Profile
 #from contests.models import *
 
 # Create your views here.
@@ -276,6 +277,15 @@ def contestproblem(request,pk1,pk2):
         return redirect('contesttask',pk=pk1)
 
 
+    cleanr = re.compile(r'<[^>]+>')
+
+    input = details.psinput
+    input = re.sub(cleanr,'',input)
+    output = details.psoutput
+    output = re.sub(cleanr,'',output)
+    input = input.split(";")
+    output = output.split(";")
+
     if request.method == 'POST':
 
         #Checking if Finished...
@@ -348,19 +358,15 @@ def contestproblem(request,pk1,pk2):
         bb.save()
         subid = bb.submissionid
 
-        p = details.pexinput
-        cleanr = re.compile(r'<[^>]+>')
-        p = re.sub(cleanr,'',p)
 
-        q = details.pexoutput
-        cleanr = re.compile(r'<[^>]+>')
-        q = re.sub(cleanr,'',q)
+
+
         lan = request.POST.get('language')
         code = request.POST.get('code')
-        lang = 'cpp17'
+
         ver = 0
         if lan == 'Java':
-            lang = 'java'
+            lan = 'java'
             ver = 3
         elif lan == 'C':
             lan = 'c'
@@ -396,10 +402,7 @@ def contestproblem(request,pk1,pk2):
         bb.problemid = pk2
         bb.save()
 
-        task = {"clientId": "c2eed3b46d56379f836878a45aadb27f", "clientSecret":"3c9b309578bd148a31033a22a62ae149deed3a00f3e5658937e2d34b6f165203", "script": code , "stdin" : p, "language" : lang, "versionIndex": ver}
-        resp = requests.post("https://api.jdoodle.com/v1/execute", json = task)
-        resp = resp.json()
-        print(resp)
+
 
 
         pbn = 0
@@ -417,353 +420,596 @@ def contestproblem(request,pk1,pk2):
 
         bb.problemtitle = spb
         bb.save()
-        if resp['statusCode'] == 200:
-            op = resp['output']
-            timelimit = resp['cpuTime']
-            memorylimit = resp['memory']
+        p = details.pexinput
+        cleanr = re.compile(r'<[^>]+>')
+        p = re.sub(cleanr,'',p)
+        #output
+        q = details.pexoutput
+        cleanr = re.compile(r'<[^>]+>')
+        q = re.sub(cleanr,'',q)
 
+        p = p.split(";")
+        q = q.split(";")
+
+        ac = True
+        usr = request.user.username
+        pro = Profile.objects.get(uname = usr)
+        rls = Ranklist.objects.get(user = uname , contestid = pk1)
+        for i in range(0,len(p)):
+            inp = p[i]
+            out = q[i]
             cleanr = re.compile(r'<[^>]+>')
-            op = re.sub(cleanr,'',op)
+            inp = re.sub(cleanr,'',inp)
+            out = re.sub(cleanr,'',out)
+            print(inp)
+            print(code)
+            print(lan)
+            print(ver)
+            task = {"clientId": "c2eed3b46d56379f836878a45aadb27f", "clientSecret":"3c9b309578bd148a31033a22a62ae149deed3a00f3e5658937e2d34b6f165203", "script": code , "stdin" : inp, "language" : lan, "versionIndex": ver}
+            resp = requests.post("https://api.jdoodle.com/v1/execute", json = task)
+            resp = resp.json()
+            #input
+            print(resp)
 
-            gtl = float(details.ptimelimit)
-            stl = (resp['cpuTime'])
-            gml = float(details.pmemorylimit) * 1024
-            sml = (resp['memory'])
+            if resp['statusCode'] == 200:
+                op = resp['output']
+                timelimit = resp['cpuTime']
+                memorylimit = resp['memory']
 
-            print(tpb)
-            rls = Ranklist.objects.get(user = uname , contestid = pk1)
-            if str(stl) == 'None' or str(sml) == 'None':
-                bb.status = 'Syntex Error'
-                bb.save()
-                if pbn == 0:
-                    x = rsl.tpb1
-                    x += 10
-                    rls.tpb1 = x
-                    rls.save()
-                    messages.info(request, "Syntex Error")
-                    return redirect('contestproblem', pk1 = pk1, pk2=pk2)
-                elif pbn == 1:
-                    x = rsl.tpb2
-                    x += 10
-                    rls.tpb2 = x
-                    rls.save()
-                    messages.info(request, "Syntex Error")
-                    return redirect('contestproblem', pk1 = pk1, pk2=pk2)
-                elif pbn == 2:
-                    x = rsl.tpb3
-                    x += 10
-                    rls.tpb3 = x
-                    rls.save()
-                    messages.info(request, "Syntex Error")
-                    return redirect('contestproblem', pk1 = pk1, pk2=pk2)
-                elif pbn == 3:
-                    x = rsl.tpb4
-                    x += 10
-                    rls.tpb4 = x
-                    rls.save()
-                    messages.info(request, "Syntex Error")
-                    return redirect('contestproblem', pk1 = pk1, pk2=pk2)
-                elif pbn == 4:
-                    x = rsl.tpb5
-                    x += 10
-                    rls.tpb5 = x
-                    rls.save()
-                    messages.info(request, "Syntex Error")
-                    return redirect('contestproblem', pk1 = pk1, pk2=pk2)
-                elif pbn == 5:
-                    x = rsl.tpb6
-                    x += 10
-                    rls.tpb6 = x
-                    rls.save()
-                    messages.info(request, "Syntex Error")
-                    return redirect('contestproblem', pk1 = pk1, pk2=pk2)
-                elif pbn == 6:
-                    x = rsl.tpb7
-                    x += 10
-                    rls.tpb7 = x
-                    rls.save()
-                    messages.info(request, "Syntex Error")
-                    return redirect('contestproblem', pk1 = pk1, pk2=pk2)
-                elif pbn == 7:
-                    x = rsl.tpb8
-                    x += 10
-                    rls.tpb8 = x
-                    rls.save()
-                    messages.info(request, "Syntex Error")
-                    return redirect('contestproblem', pk1 = pk1, pk2=pk2)
-                elif pbn == 8:
-                    x = rsl.tpb9
-                    x += 10
-                    rls.tpb9 = x
-                    rls.save()
-                    messages.info(request, "Syntex Error")
-                    return redirect('contestproblem', pk1 = pk1, pk2=pk2)
-                elif pbn == 9:
-                    x = rsl.tpb10
-                    x += 10
-                    rls.tpb10 = x
-                    rls.save()
-                    messages.info(request, "Syntex Error")
-                    return redirect('contestproblem', pk1 = pk1, pk2=pk2)
-            else:
-                if float(stl) <= gtl :
-                    if float(sml)<=gml :
-                        if cmp(op,q) == True:
-                            bb.status = 'Accepted'
-                            bb.save()
-                            if pbn == 0 and rls.spb1 == False:
-                                rls.spb1 = True
-                                x = rls.tpb1
-                                x += 100
-                                rls.tpb1 = x
-                                rls.save()
-                            elif pbn == 1 and rls.spb2 == False:
-                                rls.spb2 = True
-                                x = rls.tpb2
-                                x += 100
-                                rls.tpb2 = x
-                                rls.save()
-                            elif pbn == 2 and rls.spb3 == False:
-                                rsl.spb3 = True
-                                x = rls.tpb3
-                                x += 100
-                                rls.tpb3 = x
-                                rls.save()
-                            elif pbn == 3 and rls.spb4 == False:
-                                rsl.spb4 = True
-                                x = rls.tpb4
-                                x += 100
-                                rls.tpb4 = x
-                                rls.save()
-                            elif pbn == 4 and rls.spb5 == False:
-                                rsl.spb5 = True
-                                x = rls.tpb5
-                                x += 100
-                                rls.tpb5 = x
-                                rls.save()
-                            elif pbn == 5 and rls.spb6 == False:
-                                rsl.spb6 = True
-                                x = rls.tpb6
-                                x += 100
-                                rls.tpb6 = x
-                                rls.save()
-                            elif pbn == 6 and rls.spb7 == False:
-                                rsl.spb7 = True
-                                x = rls.tpb7
-                                x += 100
-                                rls.tpb7 = x
-                                rls.save()
-                            elif pbn == 7 and rls.spb8 == False:
-                                rsl.spb8 = True
-                                x = rls.tpb8
-                                x += 100
-                                rls.tpb8 = x
-                                rls.save()
-                            elif pbn == 8 and rls.spb9 == False:
-                                rsl.spb9 = True
-                                x = rls.tpb9
-                                x += 100
-                                rls.tpb9 = x
-                                rls.save()
-                            elif pbn == 9 and rls.spb10 == False:
-                                rsl.spb10 = True
-                                x = rls.tpb10
-                                x += 100
-                                rls.tpb10 = x
-                                rls.save()
+                cleanr = re.compile(r'<[^>]+>')
+                op = re.sub(cleanr,'',op)
+
+                gtl = float(details.ptimelimit)
+                stl = (resp['cpuTime'])
+                gml = float(details.pmemorylimit) * 1024
+                sml = (resp['memory'])
+
+                if str(stl) == 'None' or str(sml) == 'None':
+                    bb.status = 'Syntex Error'
+                    bb.save()
+                    sub = pro.totalsub
+                    sub += 1
+                    pro.totalsub = sub
+                    wa = pro.totalwa
+                    wa += 1
+                    pro.totalwa = wa
+                    pro.save()
+                    if pbn == 0:
+                        x = rls.tpb1
+                        x += 10
+                        rls.tpb1 = x
+                        rls.save()
+                        #messages.info(request, "Syntex Error")
+                        return redirect('submission', pk = pk1)
+                    elif pbn == 1:
+                        x = rsl.tpb2
+                        x += 10
+                        rls.tpb2 = x
+                        rls.save()
+                        #messages.info(request, "Syntex Error")
+                        return redirect('submission', pk = pk1)
+                    elif pbn == 2:
+                        x = rsl.tpb3
+                        x += 10
+                        rls.tpb3 = x
+                        rls.save()
+                        #messages.info(request, "Syntex Error")
+                        return redirect('submission', pk = pk1)
+                    elif pbn == 3:
+                        x = rsl.tpb4
+                        x += 10
+                        rls.tpb4 = x
+                        rls.save()
+                        return redirect('submission', pk = pk1)
+                    elif pbn == 4:
+                        x = rsl.tpb5
+                        x += 10
+                        rls.tpb5 = x
+                        rls.save()
+                        #messages.info(request, "Syntex Error")
+                        return redirect('submission', pk = pk1)
+                    elif pbn == 5:
+                        x = rsl.tpb6
+                        x += 10
+                        rls.tpb6 = x
+                        rls.save()
+                        return redirect('submission', pk = pk1)
+                    elif pbn == 6:
+                        x = rsl.tpb7
+                        x += 10
+                        rls.tpb7 = x
+                        rls.save()
+                        return redirect('submission', pk = pk1)
+                    elif pbn == 7:
+                        x = rsl.tpb8
+                        x += 10
+                        rls.tpb8 = x
+                        rls.save()
+                        return redirect('submission', pk = pk1)
+                    elif pbn == 8:
+                        x = rsl.tpb9
+                        x += 10
+                        rls.tpb9 = x
+                        rls.save()
+                        return redirect('submission', pk = pk1)
+                    elif pbn == 9:
+                        x = rsl.tpb10
+                        x += 10
+                        rls.tpb10 = x
+                        rls.save()
+
+                        return redirect('submission', pk = pk1)
+                    ac = False
+
+                else:
+                    if float(stl) <= gtl :
+                        if float(sml)<=gml :
+                            if cmp(op,out) == True:
+                                continue
+                            else:
+                                sub = pro.totalsub
+                                sub += 1
+                                pro.totalsub = sub
+                                wa = pro.totalwa
+                                wa += 1
+                                pro.totalwa = wa
+                                pro.save()
+                                bb.status = 'Worng Answer'
+                                bb.save()
+                                if pbn == 0:
+                                    x = rls.tpb1
+                                    x += 10
+                                    rls.tpb1 = x
+                                    rls.save()
+                                    return redirect('submission', pk = pk1)
+                                elif pbn == 1:
+
+                                    x = rls.tpb2
+                                    x += 10
+                                    rls.tpb2 = x
+                                    rls.save()
+                                    return redirect('submission', pk = pk1)
+                                elif pbn == 2:
+
+                                    x = rls.tpb3
+                                    x += 10
+                                    rls.tpb3 = x
+                                    rls.save()
+                                    return redirect('submission', pk = pk1)
+                                elif pbn == 3:
+
+                                    x = rls.tpb4
+                                    x += 10
+                                    rls.tpb4 = x
+                                    rls.save()
+                                    return redirect('submission', pk = pk1)
+                                elif pbn == 4:
+
+                                    x = rls.tpb5
+                                    x += 10
+                                    rls.tpb5 = x
+                                    rls.save()
+                                    return redirect('submission', pk = pk1)
+                                elif pbn == 5:
+
+                                    x = rls.tpb6
+                                    x += 10
+                                    rls.tpb6 = x
+                                    rls.save()
+                                    return redirect('submission', pk = pk1)
+                                elif pbn == 6:
+
+                                    x = rls.tpb7
+                                    x += 10
+                                    rls.tpb7 = x
+                                    rls.save()
+                                    return redirect('submission', pk = pk1)
+                                elif pbn == 7:
+
+                                    x = rls.tpb8
+                                    x += 10
+                                    rls.tpb8 = x
+                                    rls.save()
+                                    return redirect('submission', pk = pk1)
+                                elif pbn == 8:
+
+                                    x = rls.tpb9
+                                    x += 10
+                                    rls.tpb9 = x
+                                    rls.save()
+                                    return redirect('submission', pk = pk1)
+                                elif pbn == 9:
+
+                                    x = rls.tpb10
+                                    x += 10
+                                    rls.tpb10 = x
+                                    rls.save()
+                                    return redirect('submission', pk = pk1)
+                                ac = False
+                                break
                         else:
-                            bb.status = 'Worng Answer'
+                            sub = pro.totalsub
+                            sub += 1
+                            pro.totalsub = sub
+                            me = pro.totalme
+                            me += 1
+                            pro.totalme = me
+                            pro.save()
+                            bb.status = 'Memory Limit Exc.'
                             bb.save()
                             if pbn == 0:
                                 x = rls.tpb1
                                 x += 10
                                 rls.tpb1 = x
                                 rls.save()
+                                return redirect('submission', pk = pk1)
                             elif pbn == 1:
 
                                 x = rls.tpb2
                                 x += 10
                                 rls.tpb2 = x
                                 rls.save()
+                                return redirect('submission', pk = pk1)
                             elif pbn == 2:
 
                                 x = rls.tpb3
                                 x += 10
                                 rls.tpb3 = x
                                 rls.save()
+                                return redirect('submission', pk = pk1)
                             elif pbn == 3:
 
                                 x = rls.tpb4
                                 x += 10
                                 rls.tpb4 = x
                                 rls.save()
+                                return redirect('submission', pk = pk1)
                             elif pbn == 4:
 
                                 x = rls.tpb5
                                 x += 10
                                 rls.tpb5 = x
                                 rls.save()
+                                return redirect('submission', pk = pk1)
                             elif pbn == 5:
 
                                 x = rls.tpb6
                                 x += 10
                                 rls.tpb6 = x
                                 rls.save()
+                                return redirect('submission', pk = pk1)
                             elif pbn == 6:
 
                                 x = rls.tpb7
                                 x += 10
                                 rls.tpb7 = x
                                 rls.save()
+                                return redirect('submission', pk = pk1)
                             elif pbn == 7:
 
                                 x = rls.tpb8
                                 x += 10
                                 rls.tpb8 = x
                                 rls.save()
+                                return redirect('submission', pk = pk1)
                             elif pbn == 8:
 
                                 x = rls.tpb9
                                 x += 10
                                 rls.tpb9 = x
                                 rls.save()
+                                return redirect('submission', pk = pk1)
                             elif pbn == 9:
 
                                 x = rls.tpb10
                                 x += 10
                                 rls.tpb10 = x
                                 rls.save()
+                                return redirect('submission', pk = pk1)
+                            ac = False
+                            break
                     else:
-                        bb.status = 'Memory Limit Exc.'
+                        sub = pro.totalsub
+                        sub += 1
+                        pro.totalsub = sub
+                        tl = pro.totaltle
+                        tl += 1
+                        pro.totaltle = tl
+                        pro.save()
+                        bb.status = 'Time Limit'
                         bb.save()
                         if pbn == 0:
                             x = rls.tpb1
                             x += 10
                             rls.tpb1 = x
                             rls.save()
+                            return redirect('submission', pk = pk1)
                         elif pbn == 1:
 
                             x = rls.tpb2
                             x += 10
                             rls.tpb2 = x
                             rls.save()
+                            return redirect('submission', pk = pk1)
                         elif pbn == 2:
 
                             x = rls.tpb3
                             x += 10
                             rls.tpb3 = x
                             rls.save()
+                            return redirect('submission', pk = pk1)
                         elif pbn == 3:
 
                             x = rls.tpb4
                             x += 10
                             rls.tpb4 = x
                             rls.save()
+                            return redirect('submission', pk = pk1)
                         elif pbn == 4:
 
                             x = rls.tpb5
                             x += 10
                             rls.tpb5 = x
                             rls.save()
+                            return redirect('submission', pk = pk1)
                         elif pbn == 5:
 
                             x = rls.tpb6
                             x += 10
                             rls.tpb6 = x
                             rls.save()
+                            return redirect('submission', pk = pk1)
                         elif pbn == 6:
 
                             x = rls.tpb7
                             x += 10
                             rls.tpb7 = x
                             rls.save()
+                            return redirect('submission', pk = pk1)
                         elif pbn == 7:
 
                             x = rls.tpb8
                             x += 10
                             rls.tpb8 = x
                             rls.save()
+                            return redirect('submission', pk = pk1)
                         elif pbn == 8:
 
                             x = rls.tpb9
                             x += 10
                             rls.tpb9 = x
                             rls.save()
+                            return redirect('submission', pk = pk1)
                         elif pbn == 9:
 
                             x = rls.tpb10
                             x += 10
                             rls.tpb10 = x
                             rls.save()
-                else:
-                    bb.status = 'Time Limit'
-                    bb.save()
-                    if pbn == 0:
-                        x = rls.tpb1
-                        x += 10
-                        rls.tpb1 = x
-                        rls.save()
-                    elif pbn == 1:
+                            return redirect('submission', pk = pk1)
+                        ac = False
+                        break
 
-                        x = rls.tpb2
-                        x += 10
-                        rls.tpb2 = x
-                        rls.save()
-                    elif pbn == 2:
+            else:
+                bb.status = 'Wrong Answer'
+                bb.save()
+                if pbn == 0:
+                    x = rls.tpb1
+                    x += 10
+                    rls.tpb1 = x
+                    rls.save()
+                    return redirect('submission', pk = pk1)
+                elif pbn == 1:
 
-                        x = rls.tpb3
-                        x += 10
-                        rls.tpb3 = x
-                        rls.save()
-                    elif pbn == 3:
+                    x = rls.tpb2
+                    x += 10
+                    rls.tpb2 = x
+                    rls.save()
+                    return redirect('submission', pk = pk1)
+                elif pbn == 2:
 
-                        x = rls.tpb4
-                        x += 10
-                        rls.tpb4 = x
-                        rls.save()
-                    elif pbn == 4:
+                    x = rls.tpb3
+                    x += 10
+                    rls.tpb3 = x
+                    rls.save()
+                    return redirect('submission', pk = pk1)
+                elif pbn == 3:
 
-                        x = rls.tpb5
-                        x += 10
-                        rls.tpb5 = x
-                        rls.save()
-                    elif pbn == 5:
+                    x = rls.tpb4
+                    x += 10
+                    rls.tpb4 = x
+                    rls.save()
+                    return redirect('submission', pk = pk1)
+                elif pbn == 4:
 
-                        x = rls.tpb6
-                        x += 10
-                        rls.tpb6 = x
-                        rls.save()
-                    elif pbn == 6:
+                    x = rls.tpb5
+                    x += 10
+                    rls.tpb5 = x
+                    rls.save()
+                    return redirect('submission', pk = pk1)
+                elif pbn == 5:
 
-                        x = rls.tpb7
-                        x += 10
-                        rls.tpb7 = x
-                        rls.save()
-                    elif pbn == 7:
+                    x = rls.tpb6
+                    x += 10
+                    rls.tpb6 = x
+                    rls.save()
+                    return redirect('submission', pk = pk1)
+                elif pbn == 6:
 
-                        x = rls.tpb8
-                        x += 10
-                        rls.tpb8 = x
-                        rls.save()
-                    elif pbn == 8:
+                    x = rls.tpb7
+                    x += 10
+                    rls.tpb7 = x
+                    rls.save()
+                    return redirect('submission', pk = pk1)
+                elif pbn == 7:
 
-                        x = rls.tpb9
-                        x += 10
-                        rls.tpb9 = x
-                        rls.save()
-                    elif pbn == 9:
+                    x = rls.tpb8
+                    x += 10
+                    rls.tpb8 = x
+                    rls.save()
+                    return redirect('submission', pk = pk1)
+                elif pbn == 8:
 
-                        x = rls.tpb10
-                        x += 10
-                        rls.tpb10 = x
-                        rls.save()
+                    x = rls.tpb9
+                    x += 10
+                    rls.tpb9 = x
+                    rls.save()
+                    return redirect('submission', pk = pk1)
+                elif pbn == 9:
+
+                    x = rls.tpb10
+                    x += 10
+                    rls.tpb10 = x
+                    rls.save()
+                    return redirect('submission', pk = pk1)
+                ac = False
+                messages.info(request, "Rewrite Code with Correct Formate or select language correctly")
+                return redirect('contestproblem', pk1=pk1, pk2=pk2)
+
+        if ac == True:
+            bb.status = 'Accepted'
+            bb.save()
+            sub = pro.totalsub
+            sub += 1
+            pro.totalsub = sub
+            ac = pro.totalac
+            ac += 1
+            pro.totalac = ac
+
+            if pbn == 0 and rls.spb1 == False:
+                rls.spb1 = True
+                x = rls.tpb1
+                x += 100
+                rls.tpb1 = x
+                y = rls.totalac
+                y += 1
+                rls.totalac = y
+                z = rls.totalpoint
+                z += x
+                rls.totalpoint = z
+                rls.save()
+                return redirect('submission', pk = pk1)
+            elif pbn == 1 and rls.spb2 == False:
+                rls.spb2 = True
+                x = rls.tpb2
+                x += 100
+                rls.tpb2 = x
+                y = rls.totalac
+                y += 1
+                rls.totalac = y
+                z = rls.totalpoint
+                z += x
+                rls.totalpoint = z
+                rls.save()
+                return redirect('submission', pk = pk1)
+            elif pbn == 2 and rls.spb3 == False:
+                rls.spb3 = True
+                x = rls.tpb3
+                x += 100
+                rls.tpb3 = x
+                y = rls.totalac
+                y += 1
+                rls.totalac = y
+                z = rls.totalpoint
+                z += x
+                rls.totalpoint = z
+                rls.save()
+                return redirect('submission', pk = pk1)
+            elif pbn == 3 and rls.spb4 == False:
+                rls.spb4 = True
+                x = rls.tpb4
+                x += 100
+                rls.tpb4 = x
+                y = rls.totalac
+                y += 1
+                rls.totalac = y
+                z = rls.totalpoint
+                z += x
+                rls.totalpoint = z
+                rls.save()
+                return redirect('submission', pk = pk1)
+            elif pbn == 4 and rls.spb5 == False:
+                rls.spb5 = True
+                x = rls.tpb5
+                x += 100
+                rls.tpb5 = x
+                y = rls.totalac
+                y += 1
+                rls.totalac = y
+                z = rls.totalpoint
+                z += x
+                rls.totalpoint = z
+                rls.save()
+                return redirect('submission', pk = pk1)
+            elif pbn == 5 and rls.spb6 == False:
+                rls.spb6 = True
+                x = rls.tpb6
+                x += 100
+                rls.tpb6 = x
+                y = rls.totalac
+                y += 1
+                rls.totalac = y
+                z = rls.totalpoint
+                z += x
+                rls.totalpoint = z
+                rls.save()
+                return redirect('submission', pk = pk1)
+            elif pbn == 6 and rls.spb7 == False:
+                rls.spb7 = True
+                x = rls.tpb7
+                x += 100
+                rls.tpb7 = x
+                y = rls.totalac
+                y += 1
+                rls.totalac = y
+                z = rls.totalpoint
+                z += x
+                rls.totalpoint = z
+                rls.save()
+                return redirect('submission', pk = pk1)
+            elif pbn == 7 and rls.spb8 == False:
+                rls.spb8 = True
+                x = rls.tpb8
+                x += 100
+                rls.tpb8 = x
+                y = rls.totalac
+                y += 1
+                rls.totalac = y
+                z = rls.totalpoint
+                z += x
+                rls.totalpoint = z
+                rls.save()
+                return redirect('submission', pk = pk1)
+            elif pbn == 8 and rls.spb9 == False:
+                rls.spb9 = True
+                x = rls.tpb9
+                x += 100
+                rls.tpb9 = x
+                y = rls.totalac
+                y += 1
+                rls.totalac = y
+                z = rls.totalpoint
+                z += x
+                rls.totalpoint = z
+                rls.save()
+                return redirect('submission', pk = pk1)
+            elif pbn == 9 and rls.spb10 == False:
+                rls.spb10 = True
+                x = rls.tpb10
+                x += 100
+                rls.tpb10 = x
+                y = rls.totalac
+                y += 1
+                rls.totalac = y
+                z = rls.totalpoint
+                z += x
+                rls.totalpoint = z
+                rls.save()
+                return redirect('submission', pk = pk1)
 
 
-        else:
-            messages.info(request, "Rewrite Code with Correct Formate or select language correctly")
-            return redirect('contestproblem', pk1=pk1, pk2=pk2)
 
-    return render(request, 'front/contestproblem.html',{'details':details,'language':language,'r':pk1})
+    return render(request, 'front/contestproblem.html',{'details':details,'language':language,'r':pk1,'input':input,'output':output})
 
 
 def ranklist(request,pk):
@@ -788,3 +1034,15 @@ def ranklist(request,pk):
     print(sz)
 
     return render(request, 'front/ranklist.html',{'users':users,'contest':contest,'dic':dic,'r':r,'sz':sz})
+
+
+def submission(request,pk):
+
+    sub = Submission.objects.filter(contestid = pk, user = request.user.username).order_by('-pk')
+    return render(request, 'front/submission.html',{'sub':sub,'r':pk})
+
+def viewsubmittedcode(request,pk):
+
+    code = Submission.objects.get(pk=pk)
+
+    return render(request, 'front/viewsubmittedcode.html',{'code':code})

@@ -93,7 +93,28 @@
 
      <div class="form-group" align = "center">
               <div class="col-md-12">
-                <h4 align = "center">Example Input<span style="color: red;"> *</span></h4>
+                <h4 align = "center">Sample Input<span style="color: red;"> *</span></h4>
+                    <textarea type="text" id = "sinput" name="psinput" rows = "10" class="form-control" placeholder=" use ; after every input case but not the last" required></textarea>
+              </div>
+     </div>
+     <script>
+         CKEDITOR.replace('sinput');
+      </script>
+
+      <div class="form-group" align = "center">
+               <div class="col-md-12">
+                 <h4 align = "center">Sample Output<span style="color: red;"> *</span></h4>
+                     <textarea type="text" id = "sutput" name="psoutput" rows = "10" class="form-control" config.placeholder = 'Type here...' required ></textarea>
+               </div>
+      </div>
+      <script>
+          CKEDITOR.replace('sutput');
+       </script>
+
+
+     <div class="form-group" align = "center">
+              <div class="col-md-12">
+                <h4 align = "center">Main Test Input<span style="color: red;"> *</span></h4>
                     <textarea type="text" id = "exinput" name="pexinput" rows = "10" class="form-control" placeholder="Input" required></textarea>
               </div>
      </div>
@@ -103,7 +124,7 @@
 
       <div class="form-group" align = "center">
                <div class="col-md-12">
-                 <h4 align = "center">Example Output<span style="color: red;"> *</span></h4>
+                 <h4 align = "center">Main Test Output<span style="color: red;"> *</span></h4>
                      <textarea type="text" id = "eoutput" name="pexoutput" rows = "10" class="form-control" config.placeholder = 'Type here...' required ></textarea>
                </div>
       </div>

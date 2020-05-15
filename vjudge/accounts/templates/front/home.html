@@ -1,10 +1,40 @@
 {% extends 'front/main.html' %}
 
+{% load static %}
 {% block content %}
 
 {%  include 'front/status.html' %}
 
+<style>
 
 
+</style>
+<br>
 
+<section>
+  <img class="mySlides" src="{% static 'images/home1.jpg' %}" style="width:100%">
+  <img class="mySlides" src="{% static 'images/home1.jpg' %}" style="width:100%">
+  <img class="mySlides" src="{% static 'images/home1.jpg' %}" style="width:100%">
+</section>
+
+<br>
+<h5 align="center">Programming is an art and you are the Artist</h5>
+
+<script>
+  var myIndex = 0;
+carousel();
+
+function carousel() {
+  var i;
+  var x = document.getElementsByClassName("mySlides");
+  for (i = 0; i < x.length; i++) {
+    x[i].style.display = "none";
+  }
+  myIndex++;
+  if (myIndex > x.length) {myIndex = 1}
+  x[myIndex-1].style.display = "block";
+  setTimeout(carousel, 3000);
+}
+
+</script>
 {% endblock %}

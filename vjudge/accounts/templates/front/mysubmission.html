@@ -1,5 +1,6 @@
-
 {% extends 'front/main.html' %}
+
+{% load static %}
 
 {% block content %}
 
@@ -43,55 +44,43 @@
 
 </style>
 
+<br>
 
 <br>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#"> Contest Details</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarText">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="{% url 'tasks' pk=r %}">Problems</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'ranklist' pk=r %}">Standing</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'submission' pk=r %}">Submissions</a>
-      </li>
-    </ul>
-  </div>
-</nav>
-
-<br>
 <div class="container h-100">
   <div class="d-flex justify-content-center h-100">
     <div class="user_card">
-      <h2 class = "hl" > Problems </h2>
+      <h2 class = "hl" >  </h2>
       <table class="table table-bordered" width = "500">
       	<thead>
       		<tr class="hl" >
-      			<th scope="col" width = "60%"  >Tasks</th>
+      			<th scope="col" width = "15%"  >Submission ID</th>
+
+      			<th scope="col" width = "25%" align = "center">Problem</th>
+            <th scope="col" width = "25%" align = "center">Status</th>
+            <th scope="col" width = "25%" align = "center">Language</th>
 
       		</tr>
       	</thead>
 
-        {% for i in probs %}
+        {% for id in sub %}
       	<tbody>
       		<tr>
-      			<td align = "center">
-      				<a href="{% url 'contestproblem' pk1=r pk2=i.pk%}"> {{i}} </a>
+      			<td align = 'center'>
+      				<a href="{% url 'viewsubmittedcode' pk=id.pk %}"> {{id.submissionid}} </a>
       			</td>
+
+      			<td align = 'center'><a href="{% url 'viewsubmittedcode' pk=id.pk %}">{{id.problemtitle}}</td>
+            <td align = 'center'>{{id.status}}</td>
+            <td align = 'center'>{{id.language}}</td>
       		</tr>
       	</tbody>
         {% endfor %}
       </table>
 
       <script>
-    window.setInterval('refresh()', 3000000); 	// Call a function every 10000 milliseconds (OR 10 seconds).
+    window.setInterval('refresh()', 30000000); 	// Call a function every 10000 milliseconds (OR 10 seconds).
 
   // Refresh or reload page.
     function refresh() {

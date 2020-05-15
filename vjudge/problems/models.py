@@ -12,6 +12,10 @@ class Problem(models.Model):
     pdescription = models.TextField(null=True,blank=True)
     pinput = models.TextField(null=True,blank=True)
     poutput = models.TextField(null=True,blank=True)
+    #new add
+    psinput = models.TextField(null=True,blank=True)
+    psoutput = models.TextField(null=True,blank=True)
+
     pexinput = models.TextField(null=True,blank=True)
     pexoutput = models.TextField(null=True,blank=True)
     ptags = models.TextField(null=True,blank=True)

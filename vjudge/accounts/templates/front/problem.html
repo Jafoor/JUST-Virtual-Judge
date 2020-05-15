@@ -45,11 +45,14 @@
 <br>
 <h5>Example Input Output Section</h5>
 <h6> input</h6>
-<p>{{details.pexinput | safe}}</p>
+{% for i in input %}
+<p>{{i | linebreaks}}</p>
+{% endfor %}
 <br>
 <h6> output</h6>
-<p>{{details.pexoutput | safe}}</p>
-
+{% for i in output %}
+<p>{{i | linebreaks}}</p>
+{% endfor %}
 <br>
 <h5>Note</h5>
 <p>{{details.pnote | safe}}</p>

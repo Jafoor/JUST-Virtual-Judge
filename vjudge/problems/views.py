@@ -12,6 +12,8 @@ import re
 import requests
 import string
 from accounts.models import Profile
+import operator
+from contests.models import Ranklist,Submission,Contest
 
 # Create your views here.
 
@@ -35,13 +37,15 @@ def addproblem(request):
         poutput = request.POST.get('poutput')
         pexinput = request.POST.get('pexinput')
         pexoutput = request.POST.get('pexoutput')
+        psinput = request.POST.get('psinput')
+        psoutput = request.POST.get('psoutput')
         ptags = request.POST.get('ptags')
         ptype = request.POST.get('ptype')
         pnote = request.POST.get('pnote')
         pid = request.POST.get('pid')
         pshow = request.POST.get('pshow')
-        b = Problem(pid = pid, ptitle=ptitle,ptimelimit=ptimelimit,pmemorylimit=pmemorylimit,pdescription=pdescription,pinput=pinput,poutput=poutput,pexinput=pexinput,pexoutput=pexoutput,ptags=ptags,ptype=ptype,pnote=pnote,pshow=pshow)
-        print(b)
+        b = Problem(pid = pid, ptitle=ptitle,ptimelimit=ptimelimit,pmemorylimit=pmemorylimit,pdescription=pdescription,pinput=pinput,poutput=poutput,pexinput=pexinput,pexoutput=pexoutput,ptags=ptags,ptype=ptype,pnote=pnote,pshow=pshow,psinput=psinput,psoutput=psoutput)
+        #print(b)
         b.save()
     return render(request, 'back/addproblem.html',{'type':type,'share':share})
 
@@ -66,26 +70,33 @@ def problem(request,pk):
 
 
     details = Problem.objects.get(pk=pk)
+    cleanr = re.compile(r'<[^>]+>')
+
+    input = details.psinput
+    input = re.sub(cleanr,'',input)
+    output = details.psoutput
+    output = re.sub(cleanr,'',output)
+    input = input.split(";")
+    output = output.split(";")
     p = details.pexinput
     cleanr = re.compile(r'<[^>]+>')
     p = re.sub(cleanr,'',p)
-    print(p)
+
 
 
     if request.method == 'POST':
-        p = details.pexinput
-        cleanr = re.compile(r'<[^>]+>')
-        p = re.sub(cleanr,'',p)
+        #Submissionid
+        usr = request.user.username
+        bb = Submission(user = usr)
+        bb.save()
+        subid = bb.submissionid
 
-        q = details.pexoutput
-        cleanr = re.compile(r'<[^>]+>')
-        q = re.sub(cleanr,'',q)
         lan = request.POST.get('language')
         code = request.POST.get('code')
-        lang = 'cpp17'
+        #lang = 'cpp17'
         ver = 0
         if lan == 'Java':
-            lang = 'java'
+            lan = 'java'
             ver = 3
         elif lan == 'C':
             lan = 'c'
@@ -115,50 +126,150 @@ def problem(request,pk):
             lan = 'nodejs'
             ver = 3
 
-        task = {"clientId": "c2eed3b46d56379f836878a45aadb27f", "clientSecret":"3c9b309578bd148a31033a22a62ae149deed3a00f3e5658937e2d34b6f165203", "script": code , "stdin" : p, "language" : lang, "versionIndex": ver}
-        resp = requests.post("https://api.jdoodle.com/v1/execute", json = task)
-        resp = resp.json()
-        print(resp)
-        op = resp['output']
-        timelimit = resp['cpuTime']
-        memorylimit = resp['memory']
+        #submission language
+        bb.language = lan
+        bb.code = code
+        bb.problemid = pk
+        bb.save()
 
+        details = Problem.objects.get(pk=pk)
+
+        bb.problemtitle = details.ptitle
+        bb.save()
+        p = details.pexinput
         cleanr = re.compile(r'<[^>]+>')
-        op = re.sub(cleanr,'',op)
-        gtl = float(details.ptimelimit)
-        stl = float(resp['cpuTime'])
-        gml = float(details.pmemorylimit) * 1024
-        sml = float(resp['memory'])
+        p = re.sub(cleanr,'',p)
+        #output
+        q = details.pexoutput
+        cleanr = re.compile(r'<[^>]+>')
+        q = re.sub(cleanr,'',q)
 
-        usr = request.user.username
-        info = Profile.objects.get(uname = usr)
-        tot = int(info.totalsub +1)
-        print(tot)
-        info.totalsub = tot
-        info.save()
-        if stl <= gtl :
-            if sml<=gml :
-                if cmp(op,q) == True:
-                    tot = info.totalac + 1
-                    info.totalac = tot
-                    info.save()
+        p = p.split(";")
+        q = q.split(";")
+
+        ac = True
+
+        pro = Profile.objects.get(uname = usr)
+
+        for i in range(0,len(p)):
+            inp = p[i]
+            out = q[i]
+            cleanr = re.compile(r'<[^>]+>')
+            inp = re.sub(cleanr,'',inp)
+            out = re.sub(cleanr,'',out)
+            print(inp)
+            print(out)
+            print(code)
+
+            task = {"clientId": "c2eed3b46d56379f836878a45aadb27f", "clientSecret":"3c9b309578bd148a31033a22a62ae149deed3a00f3e5658937e2d34b6f165203", "script": code , "stdin" : inp, "language" : lan, "versionIndex": ver}
+            resp = requests.post("https://api.jdoodle.com/v1/execute", json = task)
+            resp = resp.json()
+            #input
+            print(resp)
+
+            if resp['statusCode'] == 200:
+                op = resp['output']
+                timelimit = resp['cpuTime']
+                memorylimit = resp['memory']
+
+                cleanr = re.compile(r'<[^>]+>')
+                op = re.sub(cleanr,'',op)
+
+                gtl = float(details.ptimelimit)
+                stl = (resp['cpuTime'])
+                gml = float(details.pmemorylimit) * 1024
+                sml = (resp['memory'])
+
+
+
+
+                if str(stl) == 'None' or str(sml) == 'None':
+                    bb.status = 'Syntex Error'
+                    bb.save()
+                    sub = pro.totalsub
+                    sub += 1
+                    pro.totalsub = sub
+                    wa = pro.totalwa
+                    wa += 1
+                    pro.totalwa = wa
+                    pro.save()
+                    messages.info(request, "Syntex Error")
+                    return redirect('problem', pk = pk)
+                    ac = False
+                    break
+
                 else:
-                    tot = info.totalwa + 1
-                    info.totalwa = tot
-                    info.save()
-            else:
-                tot = info.totalme + 1
-                info.totalme = tot
-                info.save()
-        else:
-            tot = info.totaltle + 1
-            info.totaltle = tot
-            info.save()
-        print(cmp(q,op))
-        print(q)
-        print(op)
+                    if float(stl) <= gtl :
+                        if float(sml)<=gml :
+                            if cmp(op,out) == True:
+                                continue
+                            else:
+                                bb.status = 'Worng Answer'
+                                bb.save()
+                                sub = pro.totalsub
+                                sub += 1
+                                pro.totalsub = sub
+                                wa = pro.totalwa
+                                wa += 1
+                                pro.totalwa = wa
+                                pro.save()
+                                ac = False
+                                break
+                        else:
+                            bb.status = 'Memory Limit'
+                            bb.save()
 
-    return render(request, 'front/problem.html',{'details':details,'language':language})
+                            sub = pro.totalsub
+                            sub += 1
+                            pro.totalsub = sub
+                            me = pro.totalme
+                            me += 1
+                            pro.totalme = me
+                            pro.save()
+                            ac = False
+                            break
+                    else:
+                        bb.status = 'Time Limit'
+                        bb.save()
+
+                        sub = pro.totalsub
+                        sub += 1
+                        pro.totalsub = sub
+                        tl = pro.totaltle
+                        tl += 1
+                        pro.totaltle = tl
+                        pro.save()
+                        ac = False
+                        break
+
+            else:
+                bb.status = 'Worng Answer'
+                bb.save()
+                sub = pro.totalsub
+                sub += 1
+                pro.totalsub = sub
+                wa = pro.totalwa
+                wa += 1
+                pro.totalwa = wa
+                pro.save()
+                ac = False
+                break
+
+        if ac == True:
+            bb.status = 'Accepted'
+            bb.save()
+
+            sub = pro.totalsub
+            sub += 1
+            pro.totalsub = sub
+            ac = pro.totalac
+            ac += 1
+            pro.totalac = ac
+            pro.save()
+
+
+
+    return render(request, 'front/problem.html',{'details':details,'language':language,'input':input,'output':output})
 
 def submit(request):
 

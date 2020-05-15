@@ -12,6 +12,7 @@ from django.utils.timezone import utc
 from contests.models import *
 import requests
 
+
 def registerPage(request):
     if request.user.is_authenticated:
         return redirect('home')
@@ -58,9 +59,9 @@ def logoutUser(request):
 #@login_required(login_url = '/loginPage/')
 def home(request):
 
-    Profile.objects.all().delete()
-    contests = Contest.objects.all()
-    total_contests = contests.count()
+    #Profile.objects.all().delete()
+    #contests = Contest.objects.all()
+    #total_contests = contests.count()
     usertype = request.user.username
     print(usertype)
     context = {
@@ -73,9 +74,16 @@ def aboutpage(request):
 
 def profile(request):
 
-    pro = Profile.objects.get(uname = request.user.username)
+    usr = request.user.username
+    print(usr)
+    pro = Profile.objects.get(uname = usr )
     print(request.user.username)
 
 
 
     return render(request, 'front/profile.html',{'pro':pro})
+
+def mysubmission(request):
+
+    sub = Submission.objects.filter(user = request.user.username).order_by('-pk')
+    return render(request, 'front/mysubmission.html',{'sub':sub})

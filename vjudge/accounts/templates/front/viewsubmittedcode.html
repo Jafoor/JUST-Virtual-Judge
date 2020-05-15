@@ -1,0 +1,64 @@
+{% extends 'front/main.html' %}
+
+{% block content %}
+
+{%  include 'front/status.html' %}
+
+<style>
+  body,
+  html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #7abecc !important;
+  }
+
+  .user_card {
+    width: 1000px;
+    margin-top: auto;
+    margin-bottom: auto;
+    background: #74cfbf;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 20px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    -moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 5px;
+
+
+
+  }
+
+  .hl{
+
+    text-align: center;
+    font-weight: bold;
+    color: white;
+    padding: 20px;
+  }
+
+  .code{
+    padding-top: 100px;
+    padding-right: 100px;
+    padding-bottom: 100px;
+    padding-left: 80px;
+    background-color: white;
+  }
+
+</style>
+
+<br>
+<br>
+
+<h2 align = "center"> Your Code is Here: </h2>
+<br>
+<div class="code">
+  <p>{{code.code | linebreaks}}</p>
+</div>
+
+
+
+{% endblock %}
