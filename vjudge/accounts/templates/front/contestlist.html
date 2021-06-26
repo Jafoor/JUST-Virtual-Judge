@@ -16,7 +16,7 @@
     width: 1000px;
     margin-top: auto;
     margin-bottom: auto;
-    background: #74cfbf;
+    background: #0b839e;
     position: relative;
     display: flex;
     justify-content: center;
@@ -25,7 +25,7 @@
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     -moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    border-radius: 5px;
+    border-radius: 25px;
 
 
 
@@ -39,11 +39,20 @@
     padding: 20px;
   }
 
-</style>
+  a:link, a:visited {
+  color: white;
+  text-align: center;
+  font-size: medium;
+  text-decoration: none;
+  display: inline-block;
+}
 
+
+</style>
+<br>
 <div class="container h-100">
   <div class="d-flex justify-content-center h-100">
-    <div class="user_card">
+    <div class="user_card" style="border-radius: 25px;">
       <h2 class = "hl" > Running Contests </h2>
       <table class="table table-bordered" width = "500">
       	<thead>
@@ -56,7 +65,7 @@
 
         {% for con in running %}
       	<tbody>
-      		<tr>
+      		<tr style="color: white;font-size: medium;">
       			<td>
       				<a href="{% url 'contesttask' pk=con.pk%}"> {{con}} </a>
       			</td>
@@ -84,7 +93,7 @@
 
 <div class="container h-100">
   <div class="d-flex justify-content-center h-100">
-    <div class="user_card">
+    <div class="user_card" style="border-radius: 25px;">
       <h2 class = "hl" > Upcomming Contests </h2>
       <table class="table table-bordered" width = "500">
       	<thead>
@@ -97,7 +106,7 @@
 
         {% for con in upcomming %}
       	<tbody>
-      		<tr>
+      		<tr style="color: white; font-size: medium;">
       			<td>
       				<a href="{% url 'contesttask' pk=con.pk%}"> {{con}} </a>
       			</td>
@@ -125,7 +134,7 @@
 
 <div class="container h-100">
   <div class="d-flex justify-content-center h-100">
-    <div class="user_card">
+    <div class="user_card" style="border-radius: 25px;">
       <h2 class = "hl" > Ended Contests </h2>
       <table class="table table-bordered" width = "500">
       	<thead>
@@ -138,7 +147,7 @@
 
         {% for con in ended %}
       	<tbody>
-      		<tr>
+      		<tr style="color: white;font-size: medium;">
       			<td>
       				<a href="{% url 'contesttask' pk=con.pk%}"> {{con}} </a>
       			</td>

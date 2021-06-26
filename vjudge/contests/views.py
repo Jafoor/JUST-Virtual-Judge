@@ -216,8 +216,9 @@ def tasks(request,pk):
     pks = pks.split(",")
     probs = []
     for i in pks:
-        p1 = Problem.objects.get(pk = i)
-        probs.append(p1)
+        if i!="":
+            p1 = Problem.objects.get(pk = i)
+            probs.append(p1)
     r = pk
 
     return render(request, 'front/tasks.html',{'probs':probs,'pks':pks,'r':r})
