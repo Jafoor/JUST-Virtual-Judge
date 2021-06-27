@@ -1,4 +1,4 @@
-#!/Users/jafor/Desktop/virtualjudge/env/bin/python
+#!/Users/jafor/Desktop/JUST-Virtual-Judge/env/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys

@@ -28,7 +28,7 @@ def _deactivate(args):
 _deactivate(["nondestructive"])
 aliases["deactivate"] = _deactivate
 
-$VIRTUAL_ENV = r"/Users/jafor/Desktop/virtualjudge/env"
+$VIRTUAL_ENV = r"/Users/jafor/Desktop/JUST-Virtual-Judge/env"
 
 $_OLD_VIRTUAL_PATH = $PATH
 $PATH = $PATH[:]

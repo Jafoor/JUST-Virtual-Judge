@@ -1,4 +1,4 @@
-#!/Users/jafor/Desktop/virtualjudge/env/bin/python
+#!/Users/jafor/Desktop/JUST-Virtual-Judge/env/bin/python
 from django.core import management
 
 if __name__ == "__main__":

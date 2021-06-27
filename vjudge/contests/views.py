@@ -13,9 +13,12 @@ import re
 import requests
 import operator
 from accounts.models import Profile
+import json
 #from contests.models import *
 
 # Create your views here.
+
+headers = {'content-type': 'application/json'}
 
 def listToString(s):
 
@@ -216,8 +219,9 @@ def tasks(request,pk):
     pks = pks.split(",")
     probs = []
     for i in pks:
-        p1 = Problem.objects.get(pk = i)
-        probs.append(p1)
+        if i != '':
+            p1 = Problem.objects.get(pk = i)
+            probs.append(p1)
     r = pk
 
     return render(request, 'front/tasks.html',{'probs':probs,'pks':pks,'r':r})
@@ -445,8 +449,9 @@ def contestproblem(request,pk1,pk2):
             print(code)
             print(lan)
             print(ver)
-            task = {"clientId": "c2eed3b46d56379f836878a45aadb27f", "clientSecret":"3c9b309578bd148a31033a22a62ae149deed3a00f3e5658937e2d34b6f165203", "script": code , "stdin" : inp, "language" : lan, "versionIndex": ver}
-            resp = requests.post("https://api.jdoodle.com/v1/execute", json = task)
+            task = {"clientId": "827646b49b0d2e078eb637d28a3d4202", "clientSecret":"f81ec97b9f03ef577968c605fd1b53fe67a6b3e74bc64f3eb3435e45cb5f0779", "script": code , "stdin" : inp, "language" : lan, "versionIndex": ver}
+            resp = requests.post("https://api.jdoodle.com/v1/execute", headers=headers, json = json.dumps(task))
+            print(resp)
             resp = resp.json()
             #input
             print(resp)
