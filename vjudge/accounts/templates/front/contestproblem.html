@@ -4,37 +4,6 @@
 
 {%  include 'front/status.html' %}
 
-<style>
-  .column {
-    float: left;
-    width: 100%;
-  }
-
-  #column #row h2 {
-    text-align: center;
-
-    /* Create two equal columns that floats next to each other */
-    .column {
-      float: left;
-      width: 50%;
-      padding-top: 50px;
-      padding-right: 30px;
-      padding-bottom: 50px;
-      padding-left: 80px;
-
-       /* Should be removed. Only for demonstration */
-    }
-  }
-
-  #messages{
-    background-color: red;
-    color: #fff;
-    padding: 10px;
-    margin-top: 10px;
-  }
-
-
-</style>
 
 <br>
 
@@ -71,8 +40,11 @@
 
 <br>
 <h5>Problem Description</h5>
+<br>
 <p>
-  {{details.pdescription | safe}}
+  <strong style="color: white;">
+    {{details.pdescription | safe}}
+  </strong>
 </p>
 <br>
 <h5>Input</h5>

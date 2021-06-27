@@ -1025,9 +1025,10 @@ def ranklist(request,pk):
     x = 0
     probs = probs.split(",")
     for i in probs:
-        y = chr(ord(s)+x)
-        dic[y] = i
-        x += 1
+        if i!= "":
+            y = chr(ord(s)+x)
+            dic[y] = i
+            x += 1
     print(dic)
     r = pk
 
