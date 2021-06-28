@@ -26,29 +26,30 @@
   color: white;
 }
 </style>
-</head>
-<body>
 
-<table id="customers">
-  <tr>
-    <th>ID</th>
-    <th>Problem Title</th>
-    <th>Type</th>
-    <th>User View</th>
-    <th>Tags</th>
-  </tr>
-  {% for i in allproblem %}
-  <tr>
-    <td>{{i.pid}}</td>
-    <td> {{i.ptitle}}</td>
-    <td>{{i.ptype}}</td>
-    <td>{{i.pshow}}</td>
-    <td>{{i.ptags}}</td>
-  </tr>
-  {% endfor %}
+<div class="container">
+  <table id="customers">
+    <tr>
+      <th>ID</th>
+      <th>Problem Title</th>
+      <th>Type</th>
+      <th>User View</th>
+      <th>Tags</th>
+    </tr>
+    {% for i in allproblem %}
+    <tr>
+      <td>{{i.pid}}</td>
+      <td> {{i.ptitle}}</td>
+      <td>{{i.ptype}}</td>
+      <td>{{i.pshow}}</td>
+      <td>{{i.ptags}}</td>
+    </tr>
+    {% endfor %}
 
 
-</table>
+  </table>
+</div>
+
 
 
 {% endblock %}

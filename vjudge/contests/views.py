@@ -470,6 +470,7 @@ def contestproblem(request,pk1,pk2):
                 sml = (resp['memory'])
 
                 if str(stl) == 'None' or str(sml) == 'None':
+                    print("i am here for memory")
                     bb.status = 'Syntex Error'
                     bb.save()
                     sub = pro.totalsub
@@ -548,10 +549,14 @@ def contestproblem(request,pk1,pk2):
 
                 else:
                     if float(stl) <= gtl :
+                        print("i am here 2")
                         if float(sml)<=gml :
+                            print("i am here 3")
                             if cmp(op,out) == True:
+                                print("i am here 4")
                                 continue
                             else:
+                                print("i am here wa")
                                 sub = pro.totalsub
                                 sub += 1
                                 pro.totalsub = sub
@@ -633,6 +638,7 @@ def contestproblem(request,pk1,pk2):
                                 ac = False
                                 break
                         else:
+                            print("i am here 6")
                             sub = pro.totalsub
                             sub += 1
                             pro.totalsub = sub
@@ -714,6 +720,7 @@ def contestproblem(request,pk1,pk2):
                             ac = False
                             break
                     else:
+                        print("i am here 9")
                         sub = pro.totalsub
                         sub += 1
                         pro.totalsub = sub
@@ -796,6 +803,7 @@ def contestproblem(request,pk1,pk2):
                         break
 
             else:
+                print("i am here 10")
                 bb.status = 'Wrong Answer'
                 bb.save()
                 if pbn == 0:
@@ -872,6 +880,7 @@ def contestproblem(request,pk1,pk2):
                 return redirect('contestproblem', pk1=pk1, pk2=pk2)
 
         if ac == True:
+            print("i am here 11")
             bb.status = 'Accepted'
             bb.save()
             sub = pro.totalsub
@@ -1029,9 +1038,10 @@ def ranklist(request,pk):
     x = 0
     probs = probs.split(",")
     for i in probs:
-        y = chr(ord(s)+x)
-        dic[y] = i
-        x += 1
+        if i!= "":
+            y = chr(ord(s)+x)
+            dic[y] = i
+            x += 1
     print(dic)
     r = pk
 

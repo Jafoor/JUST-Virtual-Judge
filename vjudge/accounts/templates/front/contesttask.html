@@ -11,14 +11,14 @@
     margin: 0;
     padding: 0;
     height: 100%;
-    background: #7abecc !important;
+    background: #fff !important;
   }
 
   .user_card {
     width: 1000px;
     margin-top: auto;
     margin-bottom: auto;
-    background: #74cfbf;
+    background: #0b839e;
     position: relative;
     display: flex;
     justify-content: center;
@@ -34,7 +34,7 @@
     width: 1000px;
     margin-top: auto;
     margin-bottom: auto;
-    background: #74cfbf;
+    background: #fff;
     position: relative;
     display: flex;
     justify-content: center;
@@ -88,10 +88,10 @@
   }
 
 </style>
-
+<br>
 <div class="container h-100">
   <div class="d-flex justify-content-center h-100">
-    <div class="user_card">
+    <div class="user_card" style="border-radius: 25px;">
       <h2 class = "hl" >  {{contestdetails.ctitle}} </h2>
     </div>
   </div>
@@ -100,10 +100,11 @@
 <br>
 
 <div class="container h-100">
-  <div class="d-flex justify-content-center h-100">
-    <div class="user_card1">
-      <h2 class = "hl1" > Remaining Time to Start  </h2>
-      <p id="demo" style = "color:red"></p>
+  <div class="d-flex justify-content-center h-100" style="border-radius: 25px;">
+    <div class="user_card1" style="border-radius: 25px;">
+      <h2 class = "hl1" style="border-radius: 25px;background-color: #0b839e;color: white;" > Remaining Time to Start  </h2>
+      <br>
+      <p id="demo" style = "color: rgb(202, 49, 2)"></p>
       	<script>
       	// Set the date we're counting down to
         var x = "{{p}}";
@@ -161,7 +162,7 @@
 
           <div class="d-flex justify-content-center h-100">
 
-            <div class="user_card">
+            <div class="user_card" style="border-radius: 25px;">
               <form class=""  method="post">
                 {% csrf_token %}
               <h2 class = "hl" >  Enter Password </h2>

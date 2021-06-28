@@ -11,14 +11,14 @@
     margin: 0;
     padding: 0;
     height: 100%;
-    background: #7abecc !important;
+    background: #fff !important;
   }
 
   .user_card {
     width: 1000px;
     margin-top: auto;
     margin-bottom: auto;
-    background: #74cfbf;
+    background: #0b839e;
     position: relative;
     display: flex;
     justify-content: center;
@@ -83,7 +83,7 @@
       	<tbody>
       		<tr>
       			<td align = "center">
-      				<a href="{% url 'contestproblem' pk1=r pk2=i.pk%}"> {{i}} </a>
+      				<a style="color: white;font-size: medium;" href="{% url 'contestproblem' pk1=r pk2=i.pk%}"> {{i}} </a>
       			</td>
       		</tr>
       	</tbody>
