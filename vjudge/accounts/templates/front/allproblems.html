@@ -51,8 +51,8 @@
   </tr>
   {% for i in allproblem %}
   <tr>
-    <td><a href="{% url 'problem' pk=i.pk %}">{{i.pid}}</td>
-    <td> {{i.ptitle}}</td>
+    <td>{{i.pid}}</td>
+    <td><a href="{% url 'problem' pk=i.pk %}">{{i.ptitle}}</a></td>
     <td>{{i.ptype}}</td>
     <td>{{i.pshow}}</td>
 

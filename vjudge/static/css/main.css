@@ -18,3 +18,17 @@
 	#orders-pending{
 		background-color: #7CD1C0;
 	}
+
+	.success{
+		width: 100%;
+		padding: 5px;
+		background: green;
+		color: white;
+	}
+
+	.error{
+		width: 100%;
+		padding: 5px;
+		background: red;
+		color: white;
+	}

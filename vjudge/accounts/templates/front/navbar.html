@@ -9,7 +9,7 @@
 </style>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
- <img src="{% static 'images/logo.png' %}">
+ <img src="{% static 'images/logo1.png' %}">
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -18,22 +18,19 @@
       <li class="nav-item active">
       </li>
     </ul>
-    {% if request.user.username != '' %}
-    <span class="hello-msg"> Hello, <a class="hello-msg" href="{% url 'profile' %}"> {{request.user}} </a></span>
-    {% endif %}
-
-    {% if request.user.username == 'admin' %}
-    <span ><a  class="hello-msg" href="{% url 'dashboard' %}" > Dashboard</a></span>
-    {% endif %}
-
-
   </div>
+
+  {% if request.user.username != '' %}
+  <span class="hello-msg"> Hello, <a class="hello-msg" href="{% url 'profile' %}"> {{request.user}} </a></span>
+  {% endif %}
+
+  {% if request.user.username == 'admin' %}
+  <span ><a  class="hello-msg" href="{% url 'dashboard' %}" > Dashboard</a></span>
+  {% endif %}
 
   <span ><a class="hello-msg" href="{% url 'home' %}">Home</a></span>
 
   <span ><a class="hello-msg" href="{% url 'viewproblems' %}">Problems</a></span>
-
-  <span ><a  class="hello-msg" href="{% url 'about' %}">About</a></span>
 
   <span ><a  class="hello-msg" href="{% url 'contest' %}">Contests</a></span>
 

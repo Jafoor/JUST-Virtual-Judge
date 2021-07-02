@@ -14,8 +14,10 @@ import string
 from accounts.models import Profile
 import operator
 from contests.models import Ranklist,Submission,Contest
-
+import json
 # Create your views here.
+
+headers = {'content-type': 'application/json'}
 
 def cmp(a, b):
      return [c for c in a if c.isalpha()] == [c for c in b if c.isalpha()]
@@ -161,13 +163,14 @@ def problem(request,pk):
             print(out)
             print(code)
 
-            task = {"clientId": "c2eed3b46d56379f836878a45aadb27f", "clientSecret":"3c9b309578bd148a31033a22a62ae149deed3a00f3e5658937e2d34b6f165203", "script": code , "stdin" : inp, "language" : lan, "versionIndex": ver}
-            resp = requests.post("https://api.jdoodle.com/v1/execute", json = task)
+            task = {"clientId": "827646b49b0d2e078eb637d28a3d4202", "clientSecret":"f81ec97b9f03ef577968c605fd1b53fe67a6b3e74bc64f3eb3435e45cb5f0779", "script": code , "stdin" : inp, "language" : lan, "versionIndex": ver}
+            resp = requests.post("https://api.jdoodle.com/v1/execute", headers=headers, json = json.dumps(task))
             resp = resp.json()
             #input
             print(resp)
 
             if resp['statusCode'] == 200:
+                print(200)
                 op = resp['output']
                 timelimit = resp['cpuTime']
                 memorylimit = resp['memory']
@@ -200,8 +203,11 @@ def problem(request,pk):
 
                 else:
                     if float(stl) <= gtl :
+                        print(1)
                         if float(sml)<=gml :
+                            print(2)
                             if cmp(op,out) == True:
+                                print(3)
                                 continue
                             else:
                                 bb.status = 'Worng Answer'
@@ -214,6 +220,7 @@ def problem(request,pk):
                                 pro.totalwa = wa
                                 pro.save()
                                 ac = False
+                                message.error(request, 'Wrong Answer')
                                 break
                         else:
                             bb.status = 'Memory Limit'
@@ -227,6 +234,7 @@ def problem(request,pk):
                             pro.totalme = me
                             pro.save()
                             ac = False
+                            message.error(request, 'Memory Limit')
                             break
                     else:
                         bb.status = 'Time Limit'
@@ -240,6 +248,7 @@ def problem(request,pk):
                         pro.totaltle = tl
                         pro.save()
                         ac = False
+                        message.error(request, 'Time Limit')
                         break
 
             else:
@@ -253,9 +262,11 @@ def problem(request,pk):
                 pro.totalwa = wa
                 pro.save()
                 ac = False
+                messages.erroe(request, 'Wrong Answer')
                 break
 
         if ac == True:
+            print("ac")
             bb.status = 'Accepted'
             bb.save()
 
@@ -266,6 +277,8 @@ def problem(request,pk):
             ac += 1
             pro.totalac = ac
             pro.save()
+            messages.success(request, 'Accepted')
+        return redirect('profile')
 
 
 
