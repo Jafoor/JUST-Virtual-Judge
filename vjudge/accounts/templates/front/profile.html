@@ -41,36 +41,50 @@
   </ul>
   {% endif %}
 
-<div class="row">
-  <div class="column" >
-  <h3 style="color:White; font-size:30px; padding-left: 40px;" >{{request.user.username}}</h3>
+<div class="row mt-4 ">
+
+
+  <div class="col-lg-4 col-md-4 col-sm-12" >
+  <p style="" >Username: {{request.user.username}}</p>
     <br>
     <div class="gallery">
   <a target="_blank">
+    {% if pro.pic %}
+    <img src="{{pro.pic.url}}" alt="Cinque Terre" width="200" height="auto">
+    {% else %}
     <img src="{% static 'images/profile1.png'%}" alt="Cinque Terre" width="200" height="200">
+    {% endif %}
   </a>
-  <div class="desc"> <h6 style="color:White; font-size:15px;"> From </h6> {% if pro.university == '' %} {% else %} <h6> &hearts; {{pro.university}}</h6> {% endif %}</div>
+  <br>
+  <a class="btn btn-warning" href="{% url 'updateprofilepicture' %}">Update Profile Picture</a>
+  <div class="desc"> <h6 style="color:White; font-size:15px;"> From </h6></div>
 </div>
   </div>
-  <div class="column" style="">
+
+
+  <div class="col-lg-4 col-md-4 col-sm-12" style="">
     <h5 style ="color:White; font-size:20px;"> Total Problem:</h5>
     <br>
-    <h6 style ="color:blueviolet; padding-left: 40px; font-size:15px;">Submission : {{pro.totalsub}}</h6>
+    <h6 style ="color:blueviolet; padding-left: 40px; font-size:15px;">Submission : {{sub|length}}</h6>
     <br>
-    <h6 style ="color:green; padding-left: 40px; font-size:15px;"> Accepted : {{pro.totalac}}</h6>
+    <h6 style ="color:green; padding-left: 40px; font-size:15px;"> Accepted : {{ac}}</h6>
     <br>
-    <h6 style ="color:darkred; padding-left: 40px; font-size:15px;"> Wrong Answer : {{pro.totalwa}}</h6>
+    <h6 style ="color:darkred; padding-left: 40px; font-size:15px;"> Wrong Answer : {{wa}}</h6>
     <br>
-    <h6 style ="color:deeppink; padding-left: 40px; font-size:15px;"> Time limit : {{pro.totaltle}}</h6>
+    <h6 style ="color:deeppink; padding-left: 40px; font-size:15px;"> Time limit : {{th}}</h6>
     <br>
-    <!-- <h6 style ="color:navy; padding-left: 40px; font-size:15px;"> Memory limit : {{pro.totalme}}</h6>
-    <br> -->
-    <!-- <h6 style ="color:forestgreen; padding-left: 40px; font-size:15px;"> Solved problems : {{pro.totalme}}</h6>
-    <br> -->
-    <!-- <h6 style ="color:indigo; padding-left: 40px; font-size:15px;"> Perticipation in Contest : {{pro.totalme}}</h6>
-  </div> -->
+    <h6><a class="btn btn-primary btn-block " href="{% url 'submission' %}">My Submissions</a></h6>
 
 </div>
+
+{% if request.user.is_staff %}
+<div class="col-lg-4 col-md-4 col-sm-12 mt-2">
+  <a class="btn btn-primary btn-lg btn-block" href="{% url 'addproblem' %}">Add Problems</a>
+  <a class="btn btn-info btn-lg btn-block" href="{% url 'createcontest' %}">Create Contest</a>
+
+</div>
+{% endif %}
+
 
 </div>
 {% endblock %}

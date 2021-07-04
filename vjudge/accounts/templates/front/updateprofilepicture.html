@@ -1,0 +1,49 @@
+{% extends 'front/main.html' %}
+{% load static %}
+{% block content %}
+
+{%  include 'front/status.html' %}
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+/* Create two equal columns that floats next to each other */
+.column {
+  float: left;
+  width: 33%;
+  padding-top: 50px;
+  padding-right: 30px;
+  padding-bottom: 50px;
+  padding-left: 80px;
+
+   /* Should be removed. Only for demonstration */
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+
+  padding
+}
+</style>
+
+<div class="container">
+
+<div class="d-flex justify-content-center mt-4" align="">
+
+   <form class="" action="" method="POST" enctype="multipart/form-data">
+     {% csrf_token %}
+				{{form.as_p}}
+
+			<input class="btn btn-primary" type="submit" name="Update Information">
+   </form>
+
+
+</div>
+
+</div>
+{% endblock %}

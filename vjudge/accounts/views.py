@@ -4,9 +4,10 @@ from django.forms import inlineformset_factory
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from problems.models import Problem
 # Create your views here.
 from django.contrib.auth.decorators import login_required
-from .forms import CreateUserForm
+from .forms import CreateUserForm , ProfileUpdate
 import datetime
 from django.utils.timezone import utc
 from contests.models import *
@@ -33,6 +34,20 @@ def registerPage(request):
         context = {'form': form}
         return render(request , 'front/register.html', context)
 
+def updateprofilepicture(request):
+
+    profile = get_object_or_404(Profile, uname=request.user.username)
+
+    if request.method == 'POST':
+        form = ProfileUpdate(request.POST or None, request.FILES or None, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+
+    else:
+        form = ProfileUpdate(instance=profile)
+    return render(request, 'front/updateprofilepicture.html', {'form':form})
+
 def loginPage(request):
     if request.user.is_authenticated:
         return redirect('home')
@@ -56,12 +71,8 @@ def logoutUser(request):
     logout(request)
     return redirect('login')
 
-#@login_required(login_url = '/loginPage/')
 def home(request):
 
-    #Profile.objects.all().delete()
-    #contests = Contest.objects.all()
-    #total_contests = contests.count()
     usertype = request.user.username
     print(usertype)
     context = {
@@ -75,15 +86,32 @@ def aboutpage(request):
 def profile(request):
 
     usr = request.user.username
-    print(usr)
     pro = Profile.objects.get(uname = usr )
-    print(request.user.username)
+    sub = Submission.objects.filter(user = request.user.username).order_by('-pk')
+    ac = wa = th = 0
+    for i in sub:
+        if i.status == 'Accepted':
+            ac += 1
+        elif i.status == "Wrong Answer":
+            wa += 1
+        else:
+            th += 1
+    context = {
+        'pro':pro,
+        'subs':subs,
+        'ac':ac,
+        'wa':wa,
+        'th':th
+    }
 
-
-
-    return render(request, 'front/profile.html',{'pro':pro})
+    return render(request, 'front/profile.html', context)
 
 def mysubmission(request):
 
     sub = Submission.objects.filter(user = request.user.username).order_by('-pk')
+    problems = []
+    for i in sub:
+        x = get_object_or_404(Problem, pk=i.problemid)
+        problems.append(x.ptitle)
+    sub = zip(sub, problems)
     return render(request, 'front/mysubmission.html',{'sub':sub})

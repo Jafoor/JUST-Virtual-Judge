@@ -64,29 +64,20 @@
       		</tr>
       	</thead>
 
-        {% for id in sub %}
+        {% for id , title in sub %}
       	<tbody>
       		<tr>
       			<td align = 'center'>
       				<a href="{% url 'viewsubmittedcode' pk=id.pk %}"> {{id.submissionid}} </a>
       			</td>
 
-      			<td align = 'center'><a href="{% url 'viewsubmittedcode' pk=id.pk %}">{{id.problemtitle}}</td>
+      			<td align = 'center'><a href="{% url 'problem' pk=id.problemid %}">{{title}}</td>
             <td align = 'center'>{{id.status}}</td>
             <td align = 'center'>{{id.language}}</td>
       		</tr>
       	</tbody>
         {% endfor %}
       </table>
-
-      <script>
-    window.setInterval('refresh()', 30000000); 	// Call a function every 10000 milliseconds (OR 10 seconds).
-
-  // Refresh or reload page.
-    function refresh() {
-      window .location.reload();
-  }
-    </script>
 
     </div>
   </div>

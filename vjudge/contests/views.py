@@ -418,7 +418,6 @@ def contestproblem(request,pk1,pk2):
                 break
             else:
                 pbn += 1
-
         spb = whichproblem(pbn)
         tpb = Totalmarkproblem(pbn)
 

@@ -24,10 +24,6 @@
   <span class="hello-msg"> Hello, <a class="hello-msg" href="{% url 'profile' %}"> {{request.user}} </a></span>
   {% endif %}
 
-  {% if request.user.username == 'admin' %}
-  <span ><a  class="hello-msg" href="{% url 'dashboard' %}" > Dashboard</a></span>
-  {% endif %}
-
   <span ><a class="hello-msg" href="{% url 'home' %}">Home</a></span>
 
   <span ><a class="hello-msg" href="{% url 'viewproblems' %}">Problems</a></span>

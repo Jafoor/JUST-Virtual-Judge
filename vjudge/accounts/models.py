@@ -6,8 +6,7 @@ from django.contrib.auth.models import User
 class Profile(models.Model):
 
     uname = models.CharField(max_length = 50, default = "")
-    picname = models.TextField(null = True)
-    picurl = models.TextField(default = '-', null = True)
+    pic = models.ImageField(upload_to='profile_pic', blank=True, null=True)
     totalsub = models.IntegerField(default=0,null = True)
     totalac = models.IntegerField(default=0,null = True)
     totalwa = models.IntegerField(default=0,null = True)

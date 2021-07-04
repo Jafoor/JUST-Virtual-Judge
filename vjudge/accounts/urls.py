@@ -9,5 +9,6 @@ urlpatterns = [
     url(r'^logout/$',views.logoutUser, name = "logout"),
     url(r'^about/$',views.aboutpage, name = "about"),
     url(r'^profile/$',views.profile, name = "profile"),
+    url(r'^updateprofilepicture/$',views.updateprofilepicture, name = "updateprofilepicture"),
     url(r'^mysubmission/$',views.mysubmission, name = "submission"),
 ]
