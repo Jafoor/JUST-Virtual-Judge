@@ -2,71 +2,90 @@
 
 {% block content %}
 
-{%  include 'front/status.html' %}
+{% include 'front/status.html' %}
 
 <style>
-#customers {
-  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
-}
+  #myTable {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
 
-#customers td, #customers th {
-  border: 1px solid #ddd;
-  padding: 8px;
-}
+  #myTable td,
+  #myTable th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
 
-#customers tr:nth-child(even){background-color: #f2f2f2;}
+  #myTable tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
 
-#customers tr:hover {background-color: #ddd;}
+  #myTable tr:hover {
+    background-color: #ddd;
+  }
 
-#customers th {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  text-align: left;
-  align : center;
-  background-color: #55B6FF;
-  color: white;
-}
-.column {
-  float: left;
-  width: 50%;
-  padding-left: 50px;
-}
+  #myTable th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    align: center;
+    background-color: #55B6FF;
+    color: white;
+  }
 
+  .column {
+    float: left;
+    width: 50%;
+    padding-left: 50px;
+  }
 </style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $("#myInput").on("keyup", function () {
+      var value = $(this).val().toLowerCase();
+      $("#myTable tr").filter(function () {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
+</script>
 
 <body>
-
+  <input id="myInput" type="text" placeholder="Search..">
   <br>
 
-<div class="row">
-  <div class = "column">
-<table id="customers" style="margin-left: 50%;margin-right: auto;">
-  <tr align = center>
-    <th>ID</th>
-    <th>Problem Title</th>
-    <th>Date</th>
-    <th>Tag</th>
-    <th>Type</th>
-  </tr>
-  {% for i in allproblem %}
-  <tr>
-    <td>{{i.pk}}</td>
-    <td><a href="{% url 'problem' pk=i.pk %}">{{i.ptitle}}</a></td>
-    <td>{{i.date}}</td>
-    <th>{{i.ptags}}</th>
-    <td>{{i.ptype}}</td>
+  <div class="row">
+    <div class="column">
+      <table id="myTable" style="margin-left: 50%;margin-right: auto;">
+        <tr align=center>
+          <th>ID</th>
+          <th>Problem Title</th>
+          <th>Date</th>
+          <th>Tag</th>
+          <th>Type</th>
+        </tr>
+        <tbody id="myTable">
 
-  </tr>
+          {% for i in allproblem %}
+          <tr>
+            <td>{{i.pk}}</td>
+            <td><a href="{% url 'problem' pk=i.pk %}">{{i.ptitle}}</a></td>
+            <td>{{i.date}}</td>
+            <th>{{i.ptags}}</th>
+            <td>{{i.ptype}}</td>
+            
+          </tr>
+          
+          {% endfor %}
+          
+          
+        </tbody>
+      </table>
+    </div>
 
-  {% endfor %}
+  </div>
 
 
-</table>
-</div>
-
-</div>
-
-
-{% endblock %}
+  {% endblock %}
