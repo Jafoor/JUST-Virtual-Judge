@@ -2,6 +2,7 @@
 This is a virtual which can help  to arrange contest where problems are collected from different sources. So far, user can create contest, particapate in different contests, see rank list among other features. They can also archive problems to use those for later contest. 
 
 ## How to run on local machine
+- First of all, do not use herokuvjudge, that one is for production server.
 - Download the project as zip or clone it.
 - Go to root directory, run `pip install -r requirements.txt`.
 - Activate the virtual environment.
