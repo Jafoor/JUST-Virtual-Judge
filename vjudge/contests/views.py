@@ -349,6 +349,56 @@ def contestproblem(request,pk1,pk2):
             b = Ranklist(user = uname,contestid=pk1)
             b.save()
 
+
+
+
+        pbn = 0
+        prob = allusers.problems
+        prob = prob.split(",")
+        for i in prob:
+            if i == pk2:
+                #pbn += 1
+                break
+            else:
+                pbn += 1
+        spb = whichproblem(pbn)
+        tpb = Totalmarkproblem(pbn)
+
+        rls = Ranklist.objects.get(user = uname , contestid = pk1)
+
+
+        # Checking for accepted problem resubmit:
+        if pbn == 0 and rls.spb1 == True:
+            messages.error(request, 'You solved it before')
+            return render(request, 'front/submiterror.html')
+        elif pbn == 1 and rls.spb2 == True:
+            messages.error(request, 'You solved it before')
+            return render(request, 'front/submiterror.html')
+        elif pbn == 2 and rls.spb3 == True:
+            messages.error(request, 'You solved it before')
+            return render(request, 'front/submiterror.html')
+        elif pbn == 3 and rls.spb4 == True:
+            messages.error(request, 'You solved it before')
+            return render(request, 'front/submiterror.html')
+        elif pbn == 4 and rls.spb5 == True:
+            messages.error(request, 'You solved it before')
+            return render(request, 'front/submiterror.html')
+        elif pbn == 5 and rls.spb6 == True:
+            messages.error(request, 'You solved it before')
+            return render(request, 'front/submiterror.html')
+        elif pbn == 6 and rls.spb7 == True:
+            messages.error(request, 'You solved it before')
+            return render(request, 'front/submiterror.html')
+        elif pbn == 7 and rls.spb8 == True:
+            messages.error(request, 'You solved it before')
+            return render(request, 'front/submiterror.html')
+        elif pbn == 8 and rls.spb9 == True:
+            messages.error(request, 'You solved it before')
+            return render(request, 'front/submiterror.html')
+        elif pbn == 9 and rls.spb10 == True:
+            messages.error(request, 'You solved it before')
+            return render(request, 'front/submiterror.html')
+
         #Submissionid
         bb = Submission(user = uname, contestid = pk1)
         bb.save()
@@ -398,21 +448,6 @@ def contestproblem(request,pk1,pk2):
         bb.problemid = pk2
         bb.save()
 
-
-
-
-        pbn = 0
-        prob = allusers.problems
-        prob = prob.split(",")
-        for i in prob:
-            if i == pk2:
-                #pbn += 1
-                break
-            else:
-                pbn += 1
-        spb = whichproblem(pbn)
-        tpb = Totalmarkproblem(pbn)
-
         bb.problemtitle = spb
         bb.save()
         p = details.pexinput
@@ -429,7 +464,8 @@ def contestproblem(request,pk1,pk2):
         ac = True
         usr = request.user.username
         pro = Profile.objects.get(uname = usr)
-        rls = Ranklist.objects.get(user = uname , contestid = pk1)
+
+
         for i in range(0,len(p)):
             inp = p[i]
             out = q[i]
