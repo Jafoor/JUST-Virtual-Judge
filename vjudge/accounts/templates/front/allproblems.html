@@ -46,17 +46,20 @@
   <tr align = center>
     <th>ID</th>
     <th>Problem Title</th>
+    <th>Date</th>
+    <th>Tag</th>
     <th>Type</th>
-    <th>User View</th>
   </tr>
   {% for i in allproblem %}
   <tr>
-    <td>{{i.pid}}</td>
+    <td>{{i.pk}}</td>
     <td><a href="{% url 'problem' pk=i.pk %}">{{i.ptitle}}</a></td>
+    <td>{{i.date}}</td>
+    <th>{{i.ptags}}</th>
     <td>{{i.ptype}}</td>
-    <td>{{i.pshow}}</td>
 
   </tr>
+
   {% endfor %}
 
 

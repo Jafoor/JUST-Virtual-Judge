@@ -9,5 +9,4 @@ urlpatterns = [
     url(r'^allproblems/$',views.allproblems, name = "allproblems"),
     url(r'^viewproblems/$',views.viewproblems, name = "viewproblems"),
     url(r'^problem/(?P<pk>\d+)/$',views.problem, name = "problem"),
-    url(r'^submit/(?P<pk>\d+)/$',views.submit, name = "submit"),
 ]

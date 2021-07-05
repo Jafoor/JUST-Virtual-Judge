@@ -26,6 +26,7 @@ def dashboard(request):
 
     return render(request, 'back/dashboard.html')
 
+@login_required(login_url = '/loginPage/')
 def addproblem(request):
 
     type = ['Easy','Hard','Mediam']
@@ -44,16 +45,14 @@ def addproblem(request):
         ptags = request.POST.get('ptags')
         ptype = request.POST.get('ptype')
         pnote = request.POST.get('pnote')
-        pid = request.POST.get('pid')
         pshow = request.POST.get('pshow')
-        b = Problem(pid = pid, ptitle=ptitle,ptimelimit=ptimelimit,pmemorylimit=pmemorylimit,pdescription=pdescription,pinput=pinput,poutput=poutput,pexinput=pexinput,pexoutput=pexoutput,ptags=ptags,ptype=ptype,pnote=pnote,pshow=pshow,psinput=psinput,psoutput=psoutput)
-        #print(b)
+        b = Problem(ptitle=ptitle,ptimelimit=ptimelimit,pmemorylimit=pmemorylimit,pdescription=pdescription,pinput=pinput,poutput=poutput,pexinput=pexinput,pexoutput=pexoutput,ptags=ptags,ptype=ptype,pnote=pnote,pshow=pshow,psinput=psinput,psoutput=psoutput)
         b.save()
+        return redirect('allproblems')
     return render(request, 'back/addproblem.html',{'type':type,'share':share})
 
 def allproblems(request):
     allproblem = Problem.objects.all()
-    print(allproblem)
 
     return render(request, 'back/allproblems.html',{'allproblem':allproblem})
 
@@ -146,6 +145,7 @@ def problem(request,pk):
         cleanr = re.compile(r'<[^>]+>')
         q = re.sub(cleanr,'',q)
 
+
         p = p.split(";")
         q = q.split(";")
 
@@ -220,7 +220,7 @@ def problem(request,pk):
                                 pro.totalwa = wa
                                 pro.save()
                                 ac = False
-                                message.error(request, 'Wrong Answer')
+                                messages.error(request, 'Wrong Answer')
                                 break
                         else:
                             bb.status = 'Memory Limit'
@@ -234,7 +234,7 @@ def problem(request,pk):
                             pro.totalme = me
                             pro.save()
                             ac = False
-                            message.error(request, 'Memory Limit')
+                            messages.error(request, 'Memory Limit')
                             break
                     else:
                         bb.status = 'Time Limit'
@@ -248,7 +248,7 @@ def problem(request,pk):
                         pro.totaltle = tl
                         pro.save()
                         ac = False
-                        message.error(request, 'Time Limit')
+                        messages.error(request, 'Time Limit')
                         break
 
             else:
@@ -283,8 +283,3 @@ def problem(request,pk):
 
 
     return render(request, 'front/problem.html',{'details':details,'language':language,'input':input,'output':output})
-
-def submit(request):
-
-
-    return render(request, 'front/submit.html')

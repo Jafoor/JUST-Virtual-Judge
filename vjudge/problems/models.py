@@ -5,8 +5,7 @@ from django.contrib.auth.models import User
 
 class Problem(models.Model):
 
-    pid = models.CharField(max_length = 10, default = "1")
-    ptitle = models.CharField(max_length = 100)
+    ptitle = models.CharField(max_length = 200, unique=True, default="")
     ptimelimit = models.IntegerField(null=True,blank=True)
     pmemorylimit = models.IntegerField(null=True,blank=True)
     pdescription = models.TextField(null=True,blank=True)
@@ -15,7 +14,7 @@ class Problem(models.Model):
     #new add
     psinput = models.TextField(null=True,blank=True)
     psoutput = models.TextField(null=True,blank=True)
-
+    date = models.DateTimeField(auto_now_add=True, blank=True)
     pexinput = models.TextField(null=True,blank=True)
     pexoutput = models.TextField(null=True,blank=True)
     ptags = models.TextField(null=True,blank=True)

@@ -73,16 +73,9 @@ def logoutUser(request):
 
 def home(request):
 
-    usertype = request.user.username
-    print(usertype)
-    context = {
-         'usertype': usertype
-    }
-    return render(request , 'front/home.html',context)
+    return render(request , 'front/home.html')
 
-def aboutpage(request):
-    return render(request, 'front/about.html')
-
+@login_required(login_url = '/loginPage/')
 def profile(request):
 
     usr = request.user.username
@@ -98,7 +91,7 @@ def profile(request):
             th += 1
     context = {
         'pro':pro,
-        'subs':subs,
+        'sub':sub,
         'ac':ac,
         'wa':wa,
         'th':th
@@ -106,6 +99,7 @@ def profile(request):
 
     return render(request, 'front/profile.html', context)
 
+@login_required(login_url = '/loginPage/')
 def mysubmission(request):
 
     sub = Submission.objects.filter(user = request.user.username).order_by('-pk')

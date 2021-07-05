@@ -34,26 +34,6 @@ def listToString(s):
 
     return str1
 
-
-def setproblem(request,pk):
-
-    probs = Problem.objects.all()
-    if request.method == 'POST':
-        val = request.POST.getlist('cars')
-        if len(val)==0 or len(val)>10:
-            messages.info(request, "You Must add 1 to 10 Problem")
-            return redirect('setproblem',pk=pk)
-
-        p = listToString(val)
-        print(p)
-        cnt = Contest.objects.get(pk=pk)
-        cnt.problems = p
-        cnt.save()
-        return redirect('contest')
-
-
-    return render(request, 'front/setproblem.html',{'probs': probs})
-
 def contestpage(request):
 
     contests = Contest.objects.all()
@@ -141,10 +121,28 @@ def createcontestpage(request):
 
     return render(request, 'back/createcontest.html')
 
+def setproblem(request,pk):
+
+    probs = Problem.objects.all()
+    if request.method == 'POST':
+        val = request.POST.getlist('cars')
+        if len(val)==0 or len(val)>10:
+            messages.info(request, "You Must add 1 to 10 Problem")
+            return redirect('setproblem',pk=pk)
+
+        p = listToString(val)
+        print(p)
+        cnt = Contest.objects.get(pk=pk)
+        cnt.problems = p
+        cnt.save()
+        return redirect('contest')
+
+
+    return render(request, 'front/setproblem.html',{'probs': probs})
 
 
 
-
+@login_required(login_url = '/loginPage/')
 def contesttask(request,pk):
 
     contestdetails = Contest.objects.get(pk=pk)
@@ -206,12 +204,10 @@ def contesttask(request,pk):
     ln = ln.split(":")
     startdate = datetime.datetime.strptime(p1, '%d/%m/%Y %H:%M:%S')
     enddate = startdate + datetime.timedelta(hours=int(ln[0]), minutes = int(ln[1]), seconds=int(ln[2]) )
-    print(startdate)
-    print(enddate)
     finished = str(enddate.month)+", "+str(enddate.day)+", "+str(enddate.year)+" "+str(enddate.hour)+":"+str(enddate.minute)+":"+str(enddate.second)
-    print(finished)
     return render(request, 'front/contesttask.html',{'contestdetails':contestdetails, 'p':p, 'finished':finished})
 
+@login_required(login_url = '/loginPage/')
 def tasks(request,pk):
 
     con = Contest.objects.get(pk = pk)
@@ -334,10 +330,6 @@ def contestproblem(request,pk1,pk2):
             return redirect('contesttask',pk=pk1)
 
 
-
-
-
-        # checking if user in contest:
         uname = request.user.username
         allusers = Contest.objects.get(pk=pk1)
         print(allusers)
@@ -487,58 +479,58 @@ def contestproblem(request,pk1,pk2):
                         #messages.info(request, "Syntex Error")
                         return redirect('submission', pk = pk1)
                     elif pbn == 1:
-                        x = rsl.tpb2
+                        x = rls.tpb2
                         x += 10
                         rls.tpb2 = x
                         rls.save()
                         #messages.info(request, "Syntex Error")
                         return redirect('submission', pk = pk1)
                     elif pbn == 2:
-                        x = rsl.tpb3
+                        x = rls.tpb3
                         x += 10
                         rls.tpb3 = x
                         rls.save()
                         #messages.info(request, "Syntex Error")
                         return redirect('submission', pk = pk1)
                     elif pbn == 3:
-                        x = rsl.tpb4
+                        x = rls.tpb4
                         x += 10
                         rls.tpb4 = x
                         rls.save()
                         return redirect('submission', pk = pk1)
                     elif pbn == 4:
-                        x = rsl.tpb5
+                        x = rls.tpb5
                         x += 10
                         rls.tpb5 = x
                         rls.save()
                         #messages.info(request, "Syntex Error")
                         return redirect('submission', pk = pk1)
                     elif pbn == 5:
-                        x = rsl.tpb6
+                        x = rls.tpb6
                         x += 10
                         rls.tpb6 = x
                         rls.save()
                         return redirect('submission', pk = pk1)
                     elif pbn == 6:
-                        x = rsl.tpb7
+                        x = rls.tpb7
                         x += 10
                         rls.tpb7 = x
                         rls.save()
                         return redirect('submission', pk = pk1)
                     elif pbn == 7:
-                        x = rsl.tpb8
+                        x = rls.tpb8
                         x += 10
                         rls.tpb8 = x
                         rls.save()
                         return redirect('submission', pk = pk1)
                     elif pbn == 8:
-                        x = rsl.tpb9
+                        x = rls.tpb9
                         x += 10
                         rls.tpb9 = x
                         rls.save()
                         return redirect('submission', pk = pk1)
                     elif pbn == 9:
-                        x = rsl.tpb10
+                        x = rls.tpb10
                         x += 10
                         rls.tpb10 = x
                         rls.save()
@@ -1019,6 +1011,9 @@ def contestproblem(request,pk1,pk2):
                 rls.totalpoint = z
                 rls.save()
                 return redirect('submission', pk = pk1)
+            else:
+                messages.error(request, 'You solved it before')
+                return render(request, 'front/submiterror.html')
 
 
 

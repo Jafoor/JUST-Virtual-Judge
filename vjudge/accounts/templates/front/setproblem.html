@@ -17,13 +17,13 @@
 <br/>
 
 
-<h3>Bootstrap Multi Select Box With Select All and Search Feature</h3>
+<h3>Select Problems you can search to find the problems</h3>
 <form class="" action="" method="post">
 
 {% csrf_token %}
 <select id="multiselectwithsearch" multiple="multiple" name = "cars">
     {% for i in probs%}
-    <option value="{{i.pk}}">{{i.pid}}</option>
+    <option value="{{i.pk}}">{{i.ptitle}}</option>
     {% endfor %}
 </select>
 <input type="submit" value = "submit">
