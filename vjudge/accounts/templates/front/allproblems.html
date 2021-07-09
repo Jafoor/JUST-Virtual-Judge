@@ -53,11 +53,16 @@
 </script>
 
 <body>
-  <input id="myInput" type="text" placeholder="Search..">
+
+
   <br>
 
   <div class="row">
     <div class="column">
+      <div class=" ml-4 mt-4">
+        <input id="myInput" type="text" placeholder="Search problem...">
+      </div>
+
       <table id="myTable" style="margin-left: 50%;margin-right: auto;">
         <tr align=center>
           <th>ID</th>
@@ -66,7 +71,7 @@
           <th>Tag</th>
           <th>Type</th>
         </tr>
-        <tbody id="myTable">
+        <tbody id="scriptTable myTable">
 
           {% for i in allproblem %}
           <tr>
@@ -75,12 +80,12 @@
             <td>{{i.date}}</td>
             <th>{{i.ptags}}</th>
             <td>{{i.ptype}}</td>
-            
+
           </tr>
-          
+
           {% endfor %}
-          
-          
+
+
         </tbody>
       </table>
     </div>
