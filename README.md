@@ -1,5 +1,12 @@
 # *Developer Manual - JUST Virtual Judge!*
-This is a virtual which can help  to arrange contest where problems are collected from different sources. So far, user can create contest, particapate in different contests, see rank list among other features. They can also archive problems to use those for later contest. 
+This is a virtual which can help  to arrange contest where problems are collected from different sources. So far, user can create contest, particapate in different contests, see rank list among other features. They can also archive problems to use those for later contest.
+
+The intention of this project was to aid the competitive programming community within the university.
+Most often than not, it becomes harder to store data and analyze them. There is v judge.net that can be
+used for arranging programming contest.
+But it is internet dependent and load shedding in the university vicinity is not uncommon. Besides,
+arranging a contest with new problem set is really a terrific hassle. This project would also make easier
+to analyze and store data. Where in vjudge it becomes harder just to collect data for each contestant.
 
 ## How to run on local machine
 - First of all, do not use herokuvjudge, that one is for production server.
@@ -9,19 +16,46 @@ This is a virtual which can help  to arrange contest where problems are collecte
 - Go to root folder, run `python manage.py runserver`.
 
 ## How to contribute
-- Check for impending issues. 
-- If there isn't any and you want to implement any feature, then create a branch. 
+- Check for impending issues.
+- If there isn't any and you want to implement any feature, then create a branch.
 - Implement your feature.
 - Push it to the repo and make a pull request.
 
 
+## List of Features:
+Each feature that was to be implemented is given below.
+- Users can register, login, logout, update.
+- Admins can archive problems for later use.
+- Admins can hide a problem or keep in visible.
+- Admins of the site would be able to create contests with different problems.
+- Admins, contestants, offline-solvers will be able to view all problems list.
+- Admins, contestants, offline-solvers will be able to search problems by name, tag, type or date.
+- Admins, contestants, offline-solvers will be able to view particular problem details.
+- Admins, contestants, offline-solvers will be able to solve the particular problem with his
+preferred programming language.
+- Admins, contestants, offline-solvers will be able to view contests list by running, upcoming and
+ending contests.
+- Admins, contestants, offline-solvers will be able to view his all submissions including contest
+and offline solve.
+- Admins, contestants, offline-solvers will be able to view submitted code from all past
+submissions.
+- Contestants can be able to submit problems only running contests.
+- Contestants can not be able to view or submit problems until contest starts.
+- Each contestant can see his submissions with verdict.
+- Each contestant can see his submitted code but can’t see other contestant’s code in contest.
+- Each contest will have rank list on contestants.
+- During contest, if there is someone resubmits a problem that has been accepted before, s/he will
+be shown a warning message.
+- Register for upcoming contest.
+- At the end of the contest, a report will be generated. 
+
 ## *Apps*
-Below the description for each app and the function used in them is given. 
+Below the description for each app and the function used in them is given.
 
 ## accounts
-This app handles everything about related to user account. 
-**registerPage:** 
-- *Input:* 
+This app handles everything about related to user account.
+**registerPage:**
+- *Input:*
 `username, email, password, password confirmation` as form in Django
 
 - *Method:*
@@ -34,8 +68,8 @@ Checks if the input form is valid.
 `On Failure` Shows message "User was created for this username" if user name already exists. If password does not match, shoes message "Password did not match". If password is not strong then it show password criteria to make strong password.
 
 **updateprofilepicture:**
- - *Input:* 
-`image` 
+ - *Input:*
+`image`
 
 - *Method:*
 Checking profile of current user.
@@ -47,7 +81,7 @@ Checking profile of current user.
 `On Failure` shows <span style="color:red">*404*</span> error for invalid user.
 
 **loginPage**
- - *Input:* 
+ - *Input:*
 `username,password` .
 
 - *Method:*
@@ -59,18 +93,18 @@ Checking profile of current user.
 `On Failure` show message "username or password is incorrect".
 
 **logoutuser**
- - *Input:* 
-`No input` 
+ - *Input:*
+`No input`
 
 - *Method:*
 user requests to log out.
-user logs out. 
+user logs out.
 - *Output:*
 `On Success` render login page
 
 **Home**
- - *Input:* 
-`null` 
+ - *Input:*
+`null`
 - *Method:*
 gets username from user
 
@@ -78,10 +112,10 @@ gets username from user
 `On Success` renders home page
 
 **profile**
- - *Input:* 
+ - *Input:*
 `null`.
 - *Method:*
-Sets ac, wa, th to 0 
+Sets ac, wa, th to 0
 `ac == accepted result, wa == wrong answer, th == any other result`
 checks for status in submission using a loop
 `if status == accpeted`, increments ac
@@ -93,11 +127,11 @@ checks for status in submission using a loop
 `On Failure` redirects to login page
 
 **mysubmission**
- - *Input:* 
+ - *Input:*
 `null`.
 - *Method:*
 queries for all the submission.
-using loop, it finds out problem title from each submission. 
+using loop, it finds out problem title from each submission.
 [zips](https://www.w3schools.com/python/ref_func_zip.asp) submission and problems together.
 
 - *Output:*
@@ -108,17 +142,17 @@ using loop, it finds out problem title from each submission.
 ## problems
 This app handles adding, viewing and storing problems.
 **addproblem**
- - *Input:* 
+ - *Input:*
 `ptitle,ptimelimit,pmemorylimit,pdescription,pinput,poutput,pexinput,pexoutput,psinput,psoutput,ptags,ptype,pnote,pshow`.
 - *Method:*
-saves problem to database. 
+saves problem to database.
 
 - *Output:*
 `On Success` redirects to allproblems page.
 `On Failure` redirects to login.
 
 **viewproblems**
- - *Input:* 
+ - *Input:*
 `null`.
 - *Method:*
 Makes query for all problems.
@@ -126,12 +160,12 @@ Makes query for all problems.
 `On Success` redirects to allproblems page.
 
 **problems**
- - *Input:* 
+ - *Input:*
 `lan, code`.
 - *Method:*
 gets keyword argument with request.
 define support languages.
-makes query for particular problems from pk 
+makes query for particular problems from pk
 removes markup tags using re.compile
 creates a new submission
 choose language and version from lan
@@ -139,14 +173,14 @@ then call post-api with parameters [clientId, clientSecret, script, stdin, langu
 convert result into JSON file
 `if` successCode is 200 `then`, re.compile the output and check time limit and memory limit
 shows verdict
-saves the result in database 
+saves the result in database
 
 - *Output:*
 `On Success` redirects to profile page.
 
 ## contests
 **createcontestpage**
- - *Input:* 
+ - *Input:*
 `title, description, beginning date, beginning time, length, password`.
 
 - *Method:*
@@ -158,7 +192,7 @@ saves the result in database
 ****
 
 **setproblem**
- - *Input:* 
+ - *Input:*
 `problemlist`.
 - *Method:*
 Make query to get all the problems
@@ -166,10 +200,10 @@ Make query to get all the problems
 `else` convert list into string, `then` set the contest problems
 - *Output:*
 `On Success` redirects to contest page.
-`On Failure` Show message "You Must add 1 to 10 Problem". 
+`On Failure` Show message "You Must add 1 to 10 Problem".
 
 **contestpage**
- - *Input:* 
+ - *Input:*
 `null`
 - *Method:*
 Make query to get all the contests.
@@ -179,21 +213,21 @@ Divide them in to upcoming, running, ended depending starting and ending time. [
 `On Success` renders contest page.
 
 **contesttask**
- - *Input:* 
+ - *Input:*
 `null`.
 - *Method:*
 Query specific contest from database.
-Contest time is separated into date, month, year, hour, minute, second to check if the contest should be accessible. 
+Contest time is separated into date, month, year, hour, minute, second to check if the contest should be accessible.
 Check contest password.
-`if` password matches, `and` contest started or finished, `then` user may enter the contest. 
-`if` password matches, `and` contest has not started yet, `then` show "contest not started yet". 
+`if` password matches, `and` contest started or finished, `then` user may enter the contest.
+`if` password matches, `and` contest has not started yet, `then` show "contest not started yet".
 
 - *Output:*
 `On Success` redirects to task page.
 `On Failure` redirects to login page.
 
 **tasks**
- - *Input:* 
+ - *Input:*
 `null`.
 - *Method:*
 Query for specific contest.
@@ -205,7 +239,7 @@ Show problems from the list.
 `On Failure` redirects to login page.
 
 **contestpage**
- - *Input:* 
+ - *Input:*
 `code,lan`.
 
 - *Method:*
@@ -214,17 +248,17 @@ Query for contest details.
 Separate ending time into date, month, year, hour, minute, second to check if the contest ended.
 Gets keyword argument with request.
 Define support languages.
-Makes query for particular problems from pk2. 
+Makes query for particular problems from pk2.
 Separate current time into date, month, year, hour, minute, second to compare with ending time.
 Check if the user has participated.
  Choose language and version from lan.
 Removes markup tags using re.compile for code, input and output.
-Creates a new submission and calculates current point for wrong answer/TLE/MLE. 
+Creates a new submission and calculates current point for wrong answer/TLE/MLE.
 Then call post-api with parameters [clientId, clientSecret, script, stdin, language, versionIndex].
 Convert result into JSON file.
 `if` successCode is 200 `then`, re.compile the output and check time limit and memory limit.
 If the problem was solved before, show a warning message.
-For every TLE, MLE and wrong answer, extra penalty point will be added. 
+For every TLE, MLE and wrong answer, extra penalty point will be added.
 Shows verdict.
 Saves the result in database.
 
@@ -233,18 +267,18 @@ Saves the result in database.
 `On Failure` redirects to login page.
 
 **submissions**
- - *Input:* 
+ - *Input:*
 `null`.
 
 - *Method:*
-Query for submitted problems on this specific contest and specific user. 
+Query for submitted problems on this specific contest and specific user.
 
 - *Output:*
 `On Success` renders submission page.
 `On Failure` redirects to login page.
 
 **viewsubmittedcode**
- - *Input:* 
+ - *Input:*
 `null`.
 
 - *Method:*
@@ -255,7 +289,7 @@ Make query for code of specific problem that has been submitted.
 `On Failure` redirects to login page.
 
 **Ranklist**
- - *Input:* 
+ - *Input:*
 `null`.
 - *Method:*
 Query for participants in a specific contest
@@ -265,4 +299,3 @@ Show the list
 - *Output:*
 `On Success` renders to ranklist page.
 `On Failure` redirects to login page.
-
